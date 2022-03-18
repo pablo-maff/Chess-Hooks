@@ -3,7 +3,9 @@ const Square = ({ shade, onClick, style, keyVal }) => (
     onClick={onClick}
     style={style}
     key={keyVal}
-  />
+  >
+  {keyVal}
+  </button>
 )
 
 export default Square
