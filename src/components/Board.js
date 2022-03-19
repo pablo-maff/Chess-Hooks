@@ -1,7 +1,6 @@
 import Square from "./Square"
 
 const Board = ({ squares }) => {
-  console.log('squares', squares);
   const renderSquare = (i, squareShade) => (
     <Square 
       key={i}
