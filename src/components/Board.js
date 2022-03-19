@@ -1,7 +1,7 @@
 import Square from "./Square"
 
 const Board = ({ squares }) => {
-
+  console.log('squares', squares);
   const renderSquare = (i, squareShade) => (
     <Square 
       key={i}
@@ -9,6 +9,7 @@ const Board = ({ squares }) => {
       style={squares[i] ? squares[i].style : null }
       shade={squareShade}
       onClick={null}
+      piece={squares[i]}
     />
   )
   
