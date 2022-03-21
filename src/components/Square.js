@@ -4,8 +4,9 @@ const Square = ({ shade, onClick, style, keyVal, piece }) => (
       style={style}
       key={keyVal}
     >
-    {piece}
+    {piece.type}
     {keyVal}
     </button>
   )
+
 export default Square
