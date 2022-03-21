@@ -1,12 +1,13 @@
-const Square = ({ shade, onClick, style, keyVal, piece }) => (
-    <button className={'square ' + shade}
-      onClick={onClick}
-      style={style}
-      key={keyVal}
-    >
-    {piece.type}
+const Square = ({ shade, onClick, style, keyVal, piece }) => {
+  console.log(piece);
+  return <button className={'square ' + shade}
+    onClick={onClick}
+    style={style}
+    key={keyVal}
+  >
+    {piece.type.render}
     {keyVal}
-    </button>
-  )
+  </button>
+}
 
 export default Square

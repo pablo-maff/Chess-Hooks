@@ -74,7 +74,7 @@ const assignInitialPlayer = (position) => {
 const defineSquare = (position) => {
   const square = {
     id: position,
-    onClick: null, // if contains a piece select it, else null
+    onClick: null, // if contains a piece select square then select another square to move the piece, else null
     piece: {
       player: assignInitialPlayer(position),
       type: {
@@ -101,4 +101,3 @@ export const initializeBoard = () => {
  )
 
 export const isEven = num => num % 2 === 0
-
