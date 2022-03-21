@@ -3,7 +3,7 @@ import { useRef } from "react";
 import { isEven } from "../tools";
 import Square from "./Square"
 
-const Board = ({ squares }) => {
+const Board = ({ squares, selectSquare }) => {
   let initialShade = useRef(false)
   let shade = useRef('')
 
@@ -14,27 +14,28 @@ const Board = ({ squares }) => {
 
     initialShade ?
       shade = isEven(squareId) ?
-      'dark-square' : 'light-square'
+        'dark-square' : 'light-square'
       : shade = isEven(squareId) ?
-      'light-square' : 'dark-square'
+        'light-square' : 'dark-square'
 
     return shade
   }
-
-  squares = squares.map(square =>
-    <Square 
+  squares = squares.map((square) => {
+    //console.log('onClick', square.onClick);
+    return <Square
       key={square.id}
       keyVal={square.id}
       shade={selectShade(square.id)}
-      onClick={null}
       piece={square.piece}
+      selectSquare={selectSquare}
     />
-    )
+  }
+  )
 
   // Gives final shape to the board separating it by row
   const board = _.chunk(squares, 8).map((square, i) =>
     <div key={i} className='board-row'>{square}</div>
-    )
+  )
 
   return (
     <>

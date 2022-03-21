@@ -74,7 +74,6 @@ const assignInitialPlayer = (position) => {
 const defineSquare = (position) => {
   const square = {
     id: position,
-    onClick: null, // if contains a piece select square then select another square to move the piece, else null
     piece: {
       player: assignInitialPlayer(position),
       type: {

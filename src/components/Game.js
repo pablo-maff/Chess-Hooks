@@ -5,18 +5,19 @@ import Board from "./Board"
 
 const Game = () => {
   const [squares] = useState(initializeBoard())
-  const [selected, setSelected] = useState(-1)
-
-  // Next TODO
-  const handleSelect = (positionId) => {
-    setSelected()
+  const [selected, setSelected] = useState(null)
+  console.log('selectedState',selected);
+  
+  // if contains a piece select square then select another square to move the piece, else null
+  const handleSelect = (squareId) => {
+    setSelected(squareId)
   }
   
   return (
      <div className="game-board">
        <Board 
          squares={squares}
-         onClick={null}
+         selectSquare={handleSelect}
        />
      </div>
   )
