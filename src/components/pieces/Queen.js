@@ -1,10 +1,10 @@
-import { renderPiece } from "../../tools"
+import { setPieceColour } from "../../tools"
 
 const Queen = ({ player }) => {
   const whiteQueen = '♕'
   const blackQueen = '♛'
 
-  return renderPiece(player, whiteQueen, blackQueen)
+  return setPieceColour(player, whiteQueen, blackQueen)
 }
 
 export default Queen

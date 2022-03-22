@@ -5,63 +5,65 @@ import Bishop from '../components/pieces/Bishop'
 import King from '../components/pieces/King'
 import Queen from '../components/pieces/Queen'
 
-const assignInitialPiece = (position, piece = false) => {  
-  if (position >= 8 && position <= 15) {
-    if (piece) return <Pawn player={'black'}/>
-    else return 'pawn'
-  }
-  else if (position >= 48 && position <= 55) {
-    if (piece) return <Pawn player={'white'}/>
-    else return 'pawn'
+export const renderPiece = (piece) => {
+  if (piece.type === 'pawn')
+    return piece.player === 'black' ?
+      <Pawn player={'black'} />
+      : <Pawn player={'white'} />
+
+  else if (piece.type === 'rook')
+    return piece.player === 'black' ?
+      <Rook player={'black'} />
+      : <Rook player={'white'} />
+
+  else if (piece.type === 'knight')
+    return piece.player === 'black' ?
+      <Knight player={'black'} />
+      : <Knight player={'white'} />
+
+  else if (piece.type === 'bishop')
+    return piece.player === 'black' ?
+      <Bishop player={'black'} />
+      : <Bishop player={'white'} />
+
+  else if (piece.type === 'queen')
+    return piece.player === 'black' ?
+      <Queen player={'black'} />
+      : <Queen player={'white'} />
+
+  else if (piece.type === 'king')
+    return piece.player === 'black' ?
+      <King player={'black'} />
+      : <King player={'white'} />
+}
+
+export const assignInitialPiece = (position, piece = false) => {
+  if ((position >= 8 && position <= 15) || (position >= 48 && position <= 55)) {
+    return 'pawn'
   }
 
-  if (position === 0 || position === 7) {
-    if (piece) return <Rook player={'black'}/>
-    else return 'rook'
-  }
-  else if (position === 56 || position === 63){
-    if (piece) return <Rook player={'white'}/>
-    else return 'rook'
+  else if (position === 0 || position === 7 || position === 56 || position === 63) {
+    return 'rook'
   }
 
-  if (position === 1 || position === 6) {
-    if (piece) return <Knight player={'black'}/>
-    else return 'knight'
-  }
-  else if (position === 57 || position === 62) {
-    if (piece) return <Knight player={'white'}/>
-    else return 'knight'
+  else if (position === 1 || position === 6 || position === 57 || position === 62) {
+    return 'knight'
   }
 
-  if (position === 2 || position === 5 ) {
-    if (piece) return <Bishop player={'black'}/>
-    else return 'bishop'
-  }
-  else if (position === 58 || position === 61) {
-    if (piece) return <Bishop player={'white'}/>
-    else return 'bishop'
+  else if (position === 2 || position === 5 || position === 58 || position === 61) {
+    return 'bishop'
   }
 
-  if (position === 4) {
-    if (piece) return <King player={'black'}/>
-    else return 'king'
-  } 
-  else if (position === 60) {
-    if (piece) return <King player={'white'}/>
-    else return 'king'
+  else if (position === 4 || position === 60) {
+    return 'king'
   }
 
-  if (position === 3){
-    if (piece) return <Queen player={'black'}/>
-    return 'queen'
-  } 
-  else if (position === 59) {
-    if (piece) return <Queen player={'white'}/>
+  else if (position === 3 || position === 59) {
     return 'queen'
   }
 
   return null
- }
+}
 
 const assignInitialPlayer = (position) => {
   if (position <= 15) return 'black'
@@ -76,10 +78,7 @@ const defineSquare = (position) => {
     id: position,
     piece: {
       player: assignInitialPlayer(position),
-      type: {
-        name: assignInitialPiece(position),
-        render: assignInitialPiece(position, true)
-      }
+      type: assignInitialPiece(position)
     }
   }
   return square
@@ -91,12 +90,33 @@ export const initializeBoard = () => {
   for (let i = 0; i <= 63; i++) {
     squares.push(defineSquare(i))
   }
-  
+
   return squares
 }
 
- export const renderPiece = (player, whitePiece, blackPiece) => (
-   player === 'white' ? whitePiece : blackPiece
- )
+export const setPieceColour = (player, whitePiece, blackPiece) => (
+  player === 'white' ? whitePiece : blackPiece
+)
 
 export const isEven = num => num % 2 === 0
+
+export const processMove = (board, from, to) => {
+  const newBoard = [...board]
+  const piece = newBoard[from].piece
+  
+  // REMEMBER!!! returns a copy of the object with the specified values changed
+  newBoard[from] = {
+    ...newBoard[from],
+    piece: {
+      player: null,
+      type: null
+    }
+  }
+
+  newBoard[to] = {
+    ...newBoard[to],
+    piece
+  }
+
+  return newBoard
+}

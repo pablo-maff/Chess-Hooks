@@ -1,3 +1,4 @@
+import { renderPiece } from '../tools'
 
 const Square = ({ shade, selectSquare, style, keyVal, piece }) => {
   const handleClick = () => selectSquare(keyVal)
@@ -8,7 +9,7 @@ const Square = ({ shade, selectSquare, style, keyVal, piece }) => {
       style={style}
       key={keyVal}
     >
-      {piece.type.render}
+      {renderPiece(piece)}
       {keyVal}
     </button>
   )
