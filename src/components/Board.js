@@ -20,8 +20,8 @@ const Board = ({ squares, selectSquare }) => {
 
     return shade
   }
+  //console.log('squaresMap',squares);
   squares = squares.map((square) => {
-    //console.log('onClick', square.onClick);
     return <Square
       key={square.id}
       keyVal={square.id}
