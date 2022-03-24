@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { initializeBoard, processMove } from "../tools"
 import Board from "./Board"
 
@@ -7,28 +7,33 @@ function range(size, startAt = 0) {
 }
 
 const isMovePossible = (board, from, to) => {
-  const piece = board[from].piece
-  const destinationObj = board[to].piece.type
+  const piece = board[from].piece.type
+  const player = board[from].piece.player
+  const destination = board[to].piece.type
 
-  const isToOccupied = () => {
-    if (destinationObj === null) {
+  const isDestOccupied = () => {
+    if (destination === null) {
       return false
     }
     return true
   }
-
-  if (piece.type === 'pawn') {
+  
+  if (piece === 'pawn') {
     const initialPawnPositions = {
       'white': range(8, 48),
       'black': range(8, 8)
     }
 
-    if ((to === from - 8 && !isToOccupied()) || (to === from - 16 && initialPawnPositions['white'].indexOf(from) !== -1 && !isToOccupied())) {
-      return true
+    if (player === 'white') {
+      if ((to === from - 8 && !isDestOccupied()) || (to === from - 16 && initialPawnPositions['white'].indexOf(from) !== -1 && !isDestOccupied())) {
+        return true
+      }
     }
     
-    else if ((to === from + 8 && !isToOccupied()) || (to === from + 16 && initialPawnPositions['black'].indexOf(from) !== -1 && !isToOccupied())) {
-      return true
+    if (player === 'black') {
+      if ((to === from + 8 && !isDestOccupied()) || (to === from + 16 && initialPawnPositions['black'].indexOf(from) !== -1 && !isDestOccupied())) {
+        return true
+      }
     }
   }
   // NEXT TODO: Define movement rules of the rest of the pieces
@@ -39,6 +44,7 @@ const Game = () => {
   const [selected, setSelected] = useState([])
 
   // Move piece
+  // TODO Make this and movePiece more readable.
   if (selected.length === 2) {
     const from = selected[0]
     const to = selected[1]
