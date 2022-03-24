@@ -31,15 +31,12 @@ const isMovePossible = (board, from, to) => {
       return true
     }
   }
+  // NEXT TODO: Define movement rules of the rest of the pieces
 }
 
 const Game = () => {
-  const [board, setBoard] = useState([]) 
+  const [board, setBoard] = useState(initializeBoard()) 
   const [selected, setSelected] = useState([])
-
-  useEffect(() => {
-    setBoard(initializeBoard)
-  }, [])
 
   // Move piece
   if (selected.length === 2) {
