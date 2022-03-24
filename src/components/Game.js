@@ -23,20 +23,30 @@ const isMovePossible = (board, from, to) => {
       'white': range(8, 48),
       'black': range(8, 8)
     }
-
-    if (player === 'white') {
-      if ((to === from - 8 && !isDestOccupied()) || (to === from - 16 && initialPawnPositions['white'].indexOf(from) !== -1 && !isDestOccupied())) {
-        return true
+    // NEXT TODO WRITE TESTS for movements of all pieces!
+    // BUG can defeat piece of the same player
+    const isPawnMovePossible = () => {
+      if (player === 'white') {
+        if (((to === from - 8) || (to === from - 16 && initialPawnPositions[player].indexOf(from) !== -1)) && !isDestOccupied()) {
+          return true
+        }
+        else if ((to === from - 7 || to === from - 9) && isDestOccupied()) {
+          return true
+        } 
+      } 
+      if (player === 'black') {
+        if (((to === from + 8) || (to === from + 16 && initialPawnPositions[player].indexOf(from) !== -1)) && !isDestOccupied()) {
+          return true
+        }
+        else if ((to === from + 7 || to === from + 9) && isDestOccupied()) {
+          return true
+        }
       }
+      return false
     }
-    
-    if (player === 'black') {
-      if ((to === from + 8 && !isDestOccupied()) || (to === from + 16 && initialPawnPositions['black'].indexOf(from) !== -1 && !isDestOccupied())) {
-        return true
-      }
-    }
+    return isPawnMovePossible()
   }
-  // NEXT TODO: Define movement rules of the rest of the pieces
+  // TODO: Define movement rules of the rest of the pieces
 }
 
 const Game = () => {
