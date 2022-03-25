@@ -120,3 +120,6 @@ export const processMove = (board, from, to) => {
 
   return newBoard
 }
+
+export const range = (size, startAt = 0) =>
+[...Array(size).keys()].map(i => i + startAt);
