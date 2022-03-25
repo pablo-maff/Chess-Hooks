@@ -2,10 +2,12 @@ describe('Chess app', function() {
   beforeEach(function() {
     cy.visit('http://localhost:3000')
   })
+  
   it('game can be opened and pieces are rendered', function() {
     cy.contains('Chess Game')
     cy.contains('♔')
   })
+
   describe('Pawns', function() {
     it('can move forward only one square if not in initial position', function() {
       cy.move([55, 47, 8, 16, 47, 31])
@@ -134,9 +136,42 @@ describe('Chess app', function() {
 
   describe('Queen', function() {
     it('can move in any direction', function() {
-      cy.move(52, 44, 8, 16, 59, 45, 9, 17, 45, 27, 16, 24, 27, 29, 15, 23, 29, 25, 14, 22, 25, 33, 13, 21, 33, 40)
+      cy.move([52, 44, 8, 16, 59, 45, 9, 17, 45, 27, 16, 24, 27, 29, 15, 23, 29, 25, 14, 22, 25, 33, 13, 21, 33, 40])
       .contains('♕')
     })
-    //NEXT TODO: rest of queen's tests and king's tests
+    
+    it('can\'t jump over other pieces', function() {
+      cy.move([59, 43]).contains('♕').should('not.exist')
+    })
+
+    it('can destroy enemy pieces', function() {
+      cy.move([51, 35, 12, 28, 35, 28, 59, 11]).contains('♕')
+    })
+
+    it('can\'t destroy friendly pieces', function() {
+      cy.move([59, 51]).contains('♙')
+    })
+  })
+
+  describe('King', function() {
+    it('can move in any direction', function() {
+      cy.move([52, 44, 12, 20, 60, 52, 15, 23, 52, 45, 8, 16, 45, 36, 9, 17, 36, 37, 10, 18, 37, 36, 11, 19, 36, 43, 12, 20, 43, 52, 13, 21, 52, 60])
+      .contains('♔')
+    })
+
+    it('can\'t move more than one square per turn', function() {
+      cy.move([52, 36, 8, 16, 60, 44])
+
+      cy.get('#60').contains('♔')
+    })
+
+    it('can destroy enemy pieces', function() {
+      cy.move([52, 36, 13, 29, 48, 40, 29, 36, 60, 52, 36, 44, 52, 44])
+      .contains('♔')
+    })
+
+    it('can\'t destroy friendly pieces', function() {
+      cy.move([60, 52]).contains('♙')
+    })
   })
 })
