@@ -1,12 +1,13 @@
 import { range } from "../tools";
+import { isDestOccupied, isEnemyPiece, isPathClean } from "./helpers";
 
 export const isPawnMovePossible = (
   from, to,
   playerInOrigin,
-  isPathClean,
-  isDestOccupied,
-  isEnemyPiece) => {
-  
+  playerInDestination,
+  pieceInDestination,
+  board) => {
+
   // TODO define en passant rules after defining the turns system
   // TODO define promotion rules
 
@@ -36,10 +37,11 @@ export const isPawnMovePossible = (
   if (playerInOrigin === 'white') {
     if (((to === from - 8) || 
       (to === from - 16 && initialPawnPositions[playerInOrigin].includes(from)))
-      && isPathClean(whiteInitialPath) && !isDestOccupied()) {
+      && isPathClean(board, whiteInitialPath) && !isDestOccupied(pieceInDestination)) {
       return true
     }
-    else if ((to === from - 7 || to === from - 9) && isEnemyPiece() && isDestOccupied()) {
+    else if ((to === from - 7 || to === from - 9) &&
+    isEnemyPiece(playerInOrigin, playerInDestination) && isDestOccupied(pieceInDestination)) {
       return true
     }
   }
@@ -47,10 +49,11 @@ export const isPawnMovePossible = (
   if (playerInOrigin === 'black') {
     if (((to === from + 8) ||
     (to === from + 16 && initialPawnPositions[playerInOrigin].includes(from)))
-     && isPathClean(blackInitialPath) && !isDestOccupied()) {
+     && isPathClean(board, blackInitialPath) && !isDestOccupied(pieceInDestination)) {
       return true
     }
-    else if ((to === from + 7 || to === from + 9) && isEnemyPiece() && isDestOccupied()) {
+    else if ((to === from + 7 || to === from + 9) &&
+    isEnemyPiece(playerInOrigin, playerInDestination) && isDestOccupied()) {
       return true
     }
   }
