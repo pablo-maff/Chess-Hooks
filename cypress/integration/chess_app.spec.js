@@ -35,6 +35,10 @@ describe('Chess app', function() {
       cy.move([55, 39, 14, 30, 39, 30]).contains('♙')
     })
 
+    it('can\'t destroy an enemy piece moving forward', function() {
+      cy.move([55, 39, 15, 31, 39, 31]).contains('♟')
+    })
+
     it('can destroy an enemy piece using en passant', function() {
       cy.move([55, 37, 11, 27, 37, 29, 12, 28, 29, 20]).contains('♙')
       cy.get('#28').contains('♙').should('not.exist')
@@ -57,5 +61,82 @@ describe('Chess app', function() {
       cy.move([54, 38, 14, 30, 53, 37, 30, 37, 38, 30, 6, 21, 30, 22, 15, 23, 22, 14, 10, 18, 14, 6])
       cy.get('#6').contains('♕' || '♗' || '♘' || '♖')
     })
+  })
+
+  describe('Rook', function() {
+    it('can move up, down, left and right all the squares you want', function() {
+      cy.move([55, 39, 14, 30, 39, 30, 63, 23]).contains('♖')
+      cy.move([12, 28, 23, 16]).contains('♖')
+      cy.move([10, 26, 16, 40]).contains('♖')
+      cy.move([8, 16, 40, 47]).contains('♖')
+    })
+    
+    it('can\'t move in diagonal', function() {
+      cy.move([54, 46, 13, 21, 63, 27]).contains('♖').should('not.exist')
+    })
+
+    it('can\'t jump over other pieces', function() {
+      cy.move(63, 47).contains('♖').should('not.exist')
+    })
+
+    it('can destroy enemy pieces', function () {
+      cy.move([55, 39, 14, 30, 39, 30, 63, 15]).contains('♖')
+    })
+
+    it('can\'t destroy friendly pieces', function() {
+      cy.move([63, 55]).contains('♙')
+    })
+  })
+
+  describe('Knight', function() {
+    it('can move in L shape', function() {
+      cy.move([62, 45, 11, 19, 45, 30, 8, 16, 30, 36, 9, 17, 36, 46]).contains('♘')
+    })
+
+    it('can\'t move in any other way', function() {
+      cy.move([62, 45, 45, 38, 45, 29, 45, 42, 45, 27])
+
+      cy.get('#45').contains('♘')
+    })
+
+    it('can destroy enemy pieces', function() {
+      cy.move([62, 45, 12, 28, 45, 28]).contains('♘')
+    })
+
+    it('can\'t destroy friendly pieces', function() {
+      cy.move([62, 52]).contains('♙')
+    })
+  })
+
+  describe('Bishop', function() {
+    it('can move in diagonal', function() {
+      cy.move([52, 44, 8, 16, 51, 34, 15, 23, 34, 20, 9, 17, 20, 38, 11, 19, 38, 52]).contains('♗')
+    })
+
+    it('can\'t move in any other way', function() {
+      cy.move(52, 44, 15, 23, 61, 34, 14, 15, 34, 37, 34, 32, 34, 18, 34, 42)
+
+      cy.get('#34').contains('♗')
+    })
+
+    it('can\'t jump over other pieces', function() {
+      cy.move([61, 43]).contains('♗').should('not.exist')
+    })
+
+    it('can destroy enemy pieces', function() {
+      cy.move([52, 44, 8, 16, 61, 16]).contains('♗')
+    })
+
+    it('can\'t destroy friendly pieces', function() {
+      cy.move([62, 53]).contains('♙')
+    })
+  })
+
+  describe('Queen', function() {
+    it('can move in any direction', function() {
+      cy.move(52, 44, 8, 16, 59, 45, 9, 17, 45, 27, 16, 24, 27, 29, 15, 23, 29, 25, 14, 22, 25, 33, 13, 21, 33, 40)
+      .contains('♕')
+    })
+    //NEXT TODO: rest of queen's tests and king's tests
   })
 })
