@@ -5,6 +5,7 @@ const Square = ({ shade, selectSquare, style, keyVal, piece }) => {
 
   return (
     <button className={'square ' + shade}
+      id={keyVal}
       onClick={handleClick}
       style={style}
       key={keyVal}

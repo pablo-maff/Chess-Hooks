@@ -8,8 +8,8 @@ const range = (size, startAt = 0) =>
 
 const isMovePossible = (board, from, to) => {
   const pieceInOrigin = board[from].piece.type
-  const playerInOrigin = board[from].piece.player
   const pieceInDestination = board[to].piece.type
+  const playerInOrigin = board[from].piece.player
   const playerInDestination = board[to].piece.player
 
   const isDestOccupied = () => {
@@ -19,7 +19,7 @@ const isMovePossible = (board, from, to) => {
     return true
   }
   
-  // If piece is not a horse, it can't jump over other pieces!
+  // If piece is not a knight, it can't jump over other pieces!
   // This implementation works for pawns, for other pieces it will need to iterate over the full path
   const isPathClean = (path) => {
     if (board[path].piece.type === null) {
@@ -44,7 +44,6 @@ const isMovePossible = (board, from, to) => {
     const blackInitialPath = [from + 8]
 
     // NEXT TODO WRITE TESTS for movements of all pieces!
-    // BUG can defeat piece of the same player
     if (playerInOrigin === 'white') {
       if (((to === from - 8) || 
         (to === from - 16 && initialPawnPositions[playerInOrigin].includes(from)))
@@ -71,7 +70,6 @@ const isMovePossible = (board, from, to) => {
 
   if (pieceInOrigin === 'pawn') {
     return isPawnMovePossible()
-
 
   }
   // TODO: Define movement rules of the rest of the pieces
