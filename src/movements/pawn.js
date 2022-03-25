@@ -9,7 +9,7 @@ export const isPawnMovePossible = (
   board) => {
 
   // TODO define en passant rules after defining the turns system
-  // TODO define promotion rules
+  // WRITE the extra tests before implementing it!
 
   const initialPawnPositions = {
     white: range(8, 48),
@@ -19,6 +19,7 @@ export const isPawnMovePossible = (
   const whiteInitialPath = [from - 8]
   const blackInitialPath = [from + 8]
 
+  // TODO implement the logic for promotion
   const pawnPromotion = () => {
     const promotionRow = {
       white: range(8, 0),
@@ -30,8 +31,8 @@ export const isPawnMovePossible = (
       black: ['♛', '♝', '♞' ,'♜']
     }
     // if pawn reaches last row, prompt player to choose a piece for promotion
-    // if in the last row there is no piece on the front diagonal sides
-    // it can only move forward if the square is empty
+    // if in the last row there is no piece on the forward diagonal sides
+    // it can only move straightforward if the square is empty
 }
 
   if (playerInOrigin === 'white') {
