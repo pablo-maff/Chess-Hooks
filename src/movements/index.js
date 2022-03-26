@@ -4,8 +4,10 @@ import { isEnemyPiece } from "./helpers";
 import { isRookMovePossible } from "./rook";
 import { isBishopMovePossible } from "./bishop";
 import { isQueenMovePossible } from "./queen";
+import { isKingMovePossible } from "./king";
 
-
+// TODO fix bug of square 0, pieces can't move there and the rook can only get out 
+//if is going to destroy a white piece
 export const isMovePossible = (board, from, to) => {
   if (!board || !to) return false
   
@@ -38,6 +40,10 @@ export const isMovePossible = (board, from, to) => {
 
     else if (pieceInOrigin === 'queen') {
       return isQueenMovePossible(from, to, board)
+    }
+
+    else if (pieceInOrigin === 'king') {
+      return isKingMovePossible(from, to)
     }
   }
   // TODO: Define movement rules of the rest of the pieces

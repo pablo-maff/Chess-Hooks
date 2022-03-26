@@ -3,6 +3,8 @@ import columnDictionary from '../dictionaries/column.json'
 import diagonalDictionaryTLBR from '../dictionaries/diagonalTopLeftBottomRight.json'
 import diagonalDictionaryTRBL from '../dictionaries/diagonalTopRightBottomLeft.json'
 
+// TODO create a getPath function to not repeat code in every piece movement rules
+
 export const isDestOccupied = (pieceInDestination) => {
   if (pieceInDestination === null) {
     return false
