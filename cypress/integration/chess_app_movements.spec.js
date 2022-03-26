@@ -126,7 +126,7 @@ describe('Chess app', function() {
     })
   })
 
-  describe.only('Bishop', function() {
+  describe('Bishop', function() {
     it('can move in diagonal', function() {
       cy.move([52, 44, 8, 16, 61, 34, 15, 23, 34, 20, 9, 17, 20, 38, 11, 19, 38, 52]).contains('♗')
     })
@@ -150,7 +150,7 @@ describe('Chess app', function() {
     })
   })
 
-  describe('Queen', function() {
+  describe.only('Queen', function() {
     it('can move in any direction', function() {
       cy.move([52, 44, 8, 16, 59, 45, 9, 17, 45, 27, 16, 24, 27, 29, 15, 23, 29, 25, 14, 22, 25, 33, 13, 21, 33, 40])
       .contains('♕')
