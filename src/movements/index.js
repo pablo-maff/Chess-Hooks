@@ -5,6 +5,8 @@ import { isRookMovePossible } from "./rook";
 
 
 export const isMovePossible = (board, from, to) => {
+  if (!board || !to) return false
+  
   const pieceInOrigin = board[from].piece.type
   const pieceInDestination = board[to].piece.type
   const playerInOrigin = board[from].piece.player

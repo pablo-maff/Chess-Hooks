@@ -1,5 +1,6 @@
 import { isSameRow, isSameColumn, isPathClean } from "./helpers"
 
+// BUG Rook in square 0 can't move unless is destroying another piece
 export const isRookMovePossible = (from, to, board) => {
   const getPath = () => {
     const path = []
