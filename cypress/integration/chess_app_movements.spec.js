@@ -43,7 +43,7 @@ describe('Chess app', function() {
 
     // TODO add more test cases for all the en passant rules
     it('can destroy an enemy piece using en passant', function() {
-      cy.move([55, 37, 11, 27, 37, 29, 12, 28, 29, 20]).contains('♙')
+      cy.move([53, 37, 11, 27, 37, 29, 12, 28, 29, 20]).contains('♙')
       cy.get('#28').contains('♙').should('not.exist')
     })
 
@@ -96,6 +96,21 @@ describe('Chess app', function() {
       cy.move([62, 45, 11, 19, 45, 30, 8, 16, 30, 36, 9, 17, 36, 46]).contains('♘')
     })
 
+    it('can\'t exploit big jump bugs due to the nature of the board', function() {
+      cy.move([57, 40, 10, 18, 40, 23]).contains('♘').should('not.exist')
+      cy.visit('http://localhost:3000')
+      cy.move([49, 41, 6, 23, 50, 42, 23, 40]).contains('♞').should('not.exist')
+      cy.visit('http://localhost:3000')
+      cy.move([55, 47, 1, 16, 54, 46, 16, 31]).contains('♞').should('not.exist')
+      cy.visit('http://localhost:3000')
+      cy.move([49, 41, 6, 21, 50, 42, 21, 31, 52, 44, 31, 16]).contains('♞').should('not.exist')
+      cy.visit('http://localhost:3000')
+      cy.move([57, 40, 8, 16, 40, 30]).contains('♘').should('not.exist')
+      cy.visit('http://localhost:3000')
+      cy.move([62, 45, 8, 16, 45, 30, 9, 17, 30, 40]).contains('♘').should('not.exist')
+
+    })
+
     it('can\'t move in any other way', function() {
       cy.move([62, 45, 45, 38, 45, 29, 45, 42, 45, 27])
 
@@ -106,7 +121,7 @@ describe('Chess app', function() {
       cy.move([62, 45, 12, 28, 45, 28]).contains('♘')
     })
 
-    it.only('can\'t destroy friendly pieces', function() {
+    it('can\'t destroy friendly pieces', function() {
       cy.move([62, 52]).contains('♙')
     })
   })

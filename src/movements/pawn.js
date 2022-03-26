@@ -1,10 +1,9 @@
 import { range } from "../tools";
-import { isDestOccupied, isEnemyPiece, isPathClean } from "./helpers";
+import { isDestOccupied, isPathClean } from "./helpers";
 
 export const isPawnMovePossible = (
   from, to,
   playerInOrigin,
-  playerInDestination,
   pieceInDestination,
   board) => {
 
@@ -41,8 +40,7 @@ export const isPawnMovePossible = (
       && isPathClean(board, whiteInitialPath) && !isDestOccupied(pieceInDestination)) {
       return true
     }
-    else if ((to === from - 7 || to === from - 9) &&
-    isEnemyPiece(playerInOrigin, playerInDestination) && isDestOccupied(pieceInDestination)) {
+    else if ((to === from - 7 || to === from - 9) && isDestOccupied(pieceInDestination)) {
       return true
     }
   }
@@ -53,8 +51,7 @@ export const isPawnMovePossible = (
      && isPathClean(board, blackInitialPath) && !isDestOccupied(pieceInDestination)) {
       return true
     }
-    else if ((to === from + 7 || to === from + 9) &&
-    isEnemyPiece(playerInOrigin, playerInDestination) && isDestOccupied()) {
+    else if ((to === from + 7 || to === from + 9) && isDestOccupied()) {
       return true
     }
   }

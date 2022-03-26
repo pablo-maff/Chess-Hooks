@@ -1,5 +1,6 @@
 import { isPawnMovePossible } from "./pawn";
 import { isKnightMovePossible } from "./knight";
+import { isEnemyPiece } from "./helpers";
 
 
 export const isMovePossible = (board, from, to) => {
@@ -7,24 +8,20 @@ export const isMovePossible = (board, from, to) => {
   const pieceInDestination = board[to].piece.type
   const playerInOrigin = board[from].piece.player
   const playerInDestination = board[to].piece.player
-  
-  if (pieceInOrigin === 'pawn') {
-    return isPawnMovePossible(
-      from, to,
-      playerInOrigin,
-      playerInDestination,
-      pieceInDestination,
-      board,
-      )
-  }
 
-  else if (pieceInOrigin === 'knight') {
-    return isKnightMovePossible(
-      from, to,
-      playerInOrigin,
-      pieceInDestination,
-    )
-  }
+  if (isEnemyPiece(playerInOrigin, playerInDestination)) {
+    if (pieceInOrigin === 'pawn') {
+      return isPawnMovePossible(
+        from, to,
+        playerInOrigin,
+        pieceInDestination,
+        board,
+        )
+    }
 
+    else if (pieceInOrigin === 'knight') {
+      return isKnightMovePossible(from, to,)
+    }
+  }
   // TODO: Define movement rules of the rest of the pieces
 }
