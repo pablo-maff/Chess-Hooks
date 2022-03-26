@@ -79,7 +79,7 @@ describe('Chess app', function() {
     })
 
     it('can\'t jump over other pieces', function() {
-      cy.move(63, 47).contains('♖').should('not.exist')
+      cy.move([63, 47]).contains('♖').should('not.exist')
     })
 
     it('can destroy enemy pieces', function () {

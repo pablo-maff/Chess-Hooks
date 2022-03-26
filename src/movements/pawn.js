@@ -35,9 +35,9 @@ export const isPawnMovePossible = (
 }
 
   if (playerInOrigin === 'white') {
-    if (((to === from - 8) || 
-      (to === from - 16 && initialPawnPositions[playerInOrigin].includes(from)))
-      && isPathClean(board, whiteInitialPath) && !isDestOccupied(pieceInDestination)) {
+    if (((to === from - 8) && !isDestOccupied(pieceInDestination)) || 
+      ((to === from - 16 && initialPawnPositions[playerInOrigin].includes(from))
+      && isPathClean(board, whiteInitialPath) && !isDestOccupied(pieceInDestination))) {
       return true
     }
     else if ((to === from - 7 || to === from - 9) && isDestOccupied(pieceInDestination)) {
@@ -46,9 +46,9 @@ export const isPawnMovePossible = (
   }
 
   if (playerInOrigin === 'black') {
-    if (((to === from + 8) ||
-    (to === from + 16 && initialPawnPositions[playerInOrigin].includes(from)))
-     && isPathClean(board, blackInitialPath) && !isDestOccupied(pieceInDestination)) {
+    if (((to === from + 8) && !isDestOccupied(pieceInDestination)) ||
+    ((to === from + 16 && initialPawnPositions[playerInOrigin].includes(from))
+     && isPathClean(board, blackInitialPath) && !isDestOccupied(pieceInDestination))) {
       return true
     }
     else if ((to === from + 7 || to === from + 9) && isDestOccupied()) {

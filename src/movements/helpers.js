@@ -12,17 +12,16 @@ export const isDestOccupied = (pieceInDestination) => {
 
 export const isEnemyPiece = (playerInOrigin, playerInDestination) => {
   if (playerInOrigin !== playerInDestination) return true
-  
+
   return false
 }
 
 // If piece is not a knight, it can't jump over other pieces!
 // This implementation works for pawns, for other pieces it will need to iterate over the full path
 export const isPathClean = (board, path) => {
-  if (board[path].piece.type === null) {
-    return true
-  }
-  return false 
+  const filter = path.filter(p => board[p].piece.type !== null)
+  const isClean = filter.length === 0
+  return isClean
 }
 
 export const isSameRow = (from, to) => {
