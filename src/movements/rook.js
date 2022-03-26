@@ -4,9 +4,7 @@ import { isSameRow, isSameColumn, isPathClean } from "./helpers"
 export const isRookMovePossible = (from, to, board) => {
   const getPath = () => {
     const path = []
-    let pathStart
-    let pathEnd
-    let incrementBy
+    let pathStart, pathEnd, incrementBy
     
     if (from > to) {
       pathStart = to

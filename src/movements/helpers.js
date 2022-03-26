@@ -29,7 +29,7 @@ export const isSameRow = (from, to) => {
 }
 
 export const isSameColumn = (from, to) => {
-  return !!(columnDictionary[from]);
+  return !!(columnDictionary[from] && columnDictionary[from][to]);
 }
 
 export const isSameDiagonal = (from, to) => {

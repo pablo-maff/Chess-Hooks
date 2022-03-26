@@ -10,22 +10,14 @@ const Game = () => {
   useEffect(() => {
     const from = selected[0]
     const to = selected[1]
-    
+
     if (isMovePossible(board, from, to)){
       setBoard(processMove(board, from, to))
       setSelected([])
     }
     if (selected.length === 2) setSelected([])
   }, [board, selected])
-  // Move piece
-  // TODO Make this and movePiece more readable.
-  // if (selected.length === 2) {
-  //   if (isMovePossible(board, from, to)) {
-  //     setBoard(processMove(board, from, to))
-  //     setSelected([])
-  //   }
-  //   else setSelected([])
-  // }
+
   // if contains a piece select square then select another square to move the piece
   const movePiece = (boardId, from = selected[0]) => {
     if (selected.length < 2) {
