@@ -146,9 +146,8 @@ export const getPossibleMoves = (board, player) => {
   }, [])
 
   console.log('possible',possibMoves);
-} // WATCH THE VIDEOS ABOUT REDUCE AND COME BACK TO THIS
-
-// need to find the position of all the opponent pieces and check if any of them has the
+}
+  // need to find the position of all the opponent pieces and check if any of them has the
 // player's king on their path
 export const isCheck = (board, player) => {
   const opponent = player === 'white' ? 'black' : 'white'

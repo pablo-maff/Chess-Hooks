@@ -26,7 +26,6 @@ const Game = () => {
     }
     
     if (canMove && isSelectedTurn && !checkMate){
-
       setBoard(processMove(board, from, to))
       setSelected([])
       setTurn(turn === 'white' ? 'black' : 'white')
