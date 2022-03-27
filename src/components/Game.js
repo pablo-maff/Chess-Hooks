@@ -30,17 +30,16 @@ const Game = () => {
   }, [board, selected, turn, checkMate])
 
   // if contains a piece select square then select another square to move the piece
-  const movePiece = (boardId, from = selected[0]) => {
+  const selectPiecePath = (boardId) => {
     if (selected.length < 2) {
       // select to
-      if (from) {
         setSelected(selected.concat(boardId))
-      }
+    }
       // select from
       else if (board[boardId].piece.type !== null) {
         setSelected(selected.concat(boardId))
       }
-    }
+    
   }
 
   // const isCheckMate = () => {
@@ -57,7 +56,7 @@ const Game = () => {
     <div className="game-board">
       <Board
         board={board}
-        selectSquare={movePiece}
+        selectSquare={selectPiecePath}
       />
     </div>
   )
