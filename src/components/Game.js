@@ -21,13 +21,13 @@ const Game = () => {
       setCheckMate(true)
     }
 
-    if (isMovePossible(board, from, to)){
+    if (isMovePossible(board, from, to, turn, checkMate)){
       setBoard(processMove(board, from, to))
       setSelected([])
       setTurn(turn === 'white' ? 'black' : 'white')
     }
     if (selected.length === 2) setSelected([])
-  }, [board, selected, turn])
+  }, [board, selected, turn, checkMate])
 
   // if contains a piece select square then select another square to move the piece
   const movePiece = (boardId, from = selected[0]) => {
