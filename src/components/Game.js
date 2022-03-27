@@ -1,28 +1,32 @@
 import { useEffect, useState } from "react"
-import { getKingPosition, initializeBoard, processMove } from "../tools"
+import { getKingsPosition, getPossibleMoves, initializeBoard, isPlayerTurn, processMove } from "../tools"
 import { isMovePossible } from "../movements"
 import Board from "./Board"
 
 const Game = () => {
   const [board, setBoard] = useState(initializeBoard())
   const [selected, setSelected] = useState([])
-  const [checkMate, setCheckMate] = useState(false)
   const [turn, setTurn] = useState('white')
-  
-  if (checkMate) console.log('GAME OVER!');
+  const [checkMate, setCheckMate] = useState(false)
 
+  if (checkMate) console.log('GAME OVER!');
+  
+  getPossibleMoves(board, turn)
+  
   useEffect(() => {
     console.log('EFFECT!');
     const from = selected[0]
     const to = selected[1]
-    const kingPos = getKingPosition(board)
-    const canMove = isMovePossible(board, from, to, turn, checkMate)
+    const kingPos = getKingsPosition(board)
+    const canMove = isMovePossible(board, from, to)
+    const isSelectedTurn = isPlayerTurn(turn, board[from]?.piece.player)
 
     if (kingPos.length < 2) {
       setCheckMate(true)
     }
+    
+    if (canMove && isSelectedTurn && !checkMate){
 
-    if (canMove){
       setBoard(processMove(board, from, to))
       setSelected([])
       setTurn(turn === 'white' ? 'black' : 'white')
@@ -41,18 +45,7 @@ const Game = () => {
     else if (board[boardId].piece.type !== null) {
       setSelected(selected.concat(boardId))
     }
-    
   }
-
-  // const isCheckMate = () => {
-  //   getKingPosition(board)
-
-  //   if (getKingPosition.length === 1) {
-  //     setCheckMate(true)
-  //   }
-  // }
-
-  //if (checkMate) return console.log('GAME OVER!');
 
   return (
     <div className="game-board">

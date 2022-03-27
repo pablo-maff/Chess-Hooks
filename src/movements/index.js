@@ -8,15 +8,18 @@ import { isKingMovePossible } from "./king";
 
 // TODO fix bug of square 0, pieces can't move there and the rook can only get out 
 // if is going to destroy a white piece
-export const isMovePossible = (board, from, to, turn, checkMate) => {
-  if (!board || !to || checkMate) return false
+export const isMovePossible = (board, from, to) => {
+  if (!board || !to) return false
   
   const pieceInOrigin = board[from].piece.type
   const pieceInDestination = board[to].piece.type
   const playerInOrigin = board[from].piece.player
   const playerInDestination = board[to].piece.player
 
-  if (playerInOrigin === turn && isEnemyPiece(playerInOrigin, playerInDestination)) {
+  //console.log('isCheck=',isCheck(board, playerInOrigin))
+  
+
+  if (isEnemyPiece(playerInOrigin, playerInDestination)) {
     if (pieceInOrigin === 'pawn') {
       return isPawnMovePossible(
         from, to,
