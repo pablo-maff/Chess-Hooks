@@ -10,11 +10,11 @@ const Game = () => {
   const [checkMate, setCheckMate] = useState(false)
 
   if (checkMate) console.log('GAME OVER!');
-
   
   getPossibleMoves(board, turn)
   
   useEffect(() => {
+    console.log('EFFECT!');
     const from = selected[0]
     const to = selected[1]
     const kingPos = getKingsPosition(board)
@@ -26,6 +26,7 @@ const Game = () => {
     }
     
     if (canMove && isSelectedTurn && !checkMate){
+
       setBoard(processMove(board, from, to))
       setSelected([])
       setTurn(turn === 'white' ? 'black' : 'white')
