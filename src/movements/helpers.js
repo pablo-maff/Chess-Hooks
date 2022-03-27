@@ -18,8 +18,6 @@ export const isEnemyPiece = (playerInOrigin, playerInDestination) => {
   return false
 }
 
-// If piece is not a knight, it can't jump over other pieces!
-// This implementation works for pawns, for other pieces it will need to iterate over the full path
 export const isPathClean = (board, path) => {
   const filter = path.filter(p => board[p].piece.type !== null)
   const isClean = filter.length === 0

@@ -123,3 +123,9 @@ export const processMove = (board, from, to) => {
 
 export const range = (size, startAt = 0) =>
 [...Array(size).keys()].map(i => i + startAt);
+
+export const getKingPosition = (board) => {
+  const kingPosition = board.filter(square => board[square.id].piece.type === 'king')
+
+  return kingPosition
+}

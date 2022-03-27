@@ -1,15 +1,25 @@
 import { useEffect, useState } from "react"
-import { initializeBoard, processMove } from "../tools"
+import { getKingPosition, initializeBoard, processMove } from "../tools"
 import { isMovePossible } from "../movements"
 import Board from "./Board"
 
 const Game = () => {
   const [board, setBoard] = useState(initializeBoard())
   const [selected, setSelected] = useState([])
+  const [checkMate, setCheckMate] = useState(false)
   
+  if (checkMate) console.log('GAME OVER!');
   useEffect(() => {
     const from = selected[0]
     const to = selected[1]
+
+    const kingPos = getKingPosition(board)
+    console.log('kingPos', kingPos);
+    if (kingPos.length < 2) {
+      setCheckMate(true)
+    }
+
+
 
     if (isMovePossible(board, from, to)){
       setBoard(processMove(board, from, to))
@@ -31,6 +41,16 @@ const Game = () => {
       }
     }
   }
+
+  // const isCheckMate = () => {
+  //   getKingPosition(board)
+
+  //   if (getKingPosition.length === 1) {
+  //     setCheckMate(true)
+  //   }
+  // }
+
+  //if (checkMate) return console.log('GAME OVER!');
 
   return (
     <div className="game-board">
