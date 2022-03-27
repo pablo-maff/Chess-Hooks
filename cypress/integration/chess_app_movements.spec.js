@@ -8,6 +8,31 @@ describe('Chess app', function() {
     cy.contains('♔')
   })
 
+  describe.only('Turn', function() {
+    it('pieces can\'t move if it\'s not their turn', function() {
+      cy.move([8, 16]).contains('♟').should('not.exist')
+    })
+
+    it('pieces can move respecting their turn', function() {
+      cy.move([52, 36, 11, 27, 49, 41]).contains('♙')
+    })
+  })
+
+  describe('Check', function() {
+    it('can\'t move a piece that is not protecting from checkmate', function() {
+      cy.move([52, 44, 11, 19, 61, 25, 12, 20]).contains('♟').should('not.exist')
+    })
+
+    it('can move a piece to protect from checkmate', function() {
+      cy.move([52, 44, 11, 19, 61, 25, 3, 11]).contains('♛')
+    })
+
+    it('pieces can\'t move after checkmate', function() {
+      cy.move([52, 44, 11, 19, 61, 25, 12, 20, 25, 4, 14, 22])
+      .contains('♟').should('not.exist')
+    })
+  })
+
   describe('Pawns', function() {
     it('can move forward only one square if not in initial position', function() {
       cy.move([55, 47, 8, 16, 47, 31])
@@ -68,7 +93,7 @@ describe('Chess app', function() {
 
   describe('Rook', function() {
     it('can move up, down, left and right all the squares you want', function() {
-      cy.move([55, 39, 14, 30, 39, 30, 63, 23]).contains('♖')
+      cy.move([55, 39, 14, 30, 39, 30, 9, 25, 63, 23]).contains('♖')
       cy.move([12, 28, 23, 16]).contains('♖')
       cy.move([10, 26, 16, 40]).contains('♖')
       cy.move([8, 16, 40, 47]).contains('♖')
@@ -83,7 +108,7 @@ describe('Chess app', function() {
     })
 
     it('can destroy enemy pieces', function () {
-      cy.move([55, 39, 14, 30, 39, 30, 63, 15]).contains('♖')
+      cy.move([55, 39, 14, 30, 39, 30, 8, 16, 63, 15]).contains('♖')
     })
 
     it('can\'t destroy friendly pieces', function() {
@@ -161,7 +186,7 @@ describe('Chess app', function() {
     })
 
     it('can destroy enemy pieces', function() {
-      cy.move([51, 35, 12, 28, 35, 28, 59, 11]).contains('♕')
+      cy.move([51, 35, 12, 28, 35, 28, 8, 16, 59, 11]).contains('♕')
     })
 
     it('can\'t destroy friendly pieces', function() {
