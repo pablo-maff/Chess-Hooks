@@ -7,26 +7,27 @@ const Game = () => {
   const [board, setBoard] = useState(initializeBoard())
   const [selected, setSelected] = useState([])
   const [checkMate, setCheckMate] = useState(false)
+  const [turn, setTurn] = useState('white')
   
+  console.log('turn',turn);
   if (checkMate) console.log('GAME OVER!');
+
   useEffect(() => {
     const from = selected[0]
     const to = selected[1]
 
     const kingPos = getKingPosition(board)
-    console.log('kingPos', kingPos);
     if (kingPos.length < 2) {
       setCheckMate(true)
     }
 
-
-
     if (isMovePossible(board, from, to)){
       setBoard(processMove(board, from, to))
       setSelected([])
+      setTurn(turn === 'white' ? 'black' : 'white')
     }
     if (selected.length === 2) setSelected([])
-  }, [board, selected])
+  }, [board, selected, turn])
 
   // if contains a piece select square then select another square to move the piece
   const movePiece = (boardId, from = selected[0]) => {
