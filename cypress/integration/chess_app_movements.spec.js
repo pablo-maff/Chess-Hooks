@@ -8,7 +8,7 @@ describe('Chess app', function() {
     cy.contains('♔')
   })
 
-  describe.only('Turn', function() {
+  describe('Turn', function() {
     it('pieces can\'t move if it\'s not their turn', function() {
       cy.move([8, 16]).contains('♟').should('not.exist')
     })
@@ -18,7 +18,7 @@ describe('Chess app', function() {
     })
   })
 
-  describe.only('Check', function() {
+  describe('Check', function() {
     it('can\'t move a piece that is not protecting from checkmate', function() {
       cy.move([52, 44, 11, 19, 61, 25, 12, 20]).contains('♟').should('not.exist')
     })
