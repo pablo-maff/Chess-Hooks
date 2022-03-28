@@ -1,10 +1,10 @@
-import { setPieceColour } from "../../tools"
+import { setPieceColor } from "../../tools"
 
 const Pawn = ({ player }) => {
   const whitePawn = '♙'
   const blackPawn = '♟'
 
-  return setPieceColour(player, whitePawn, blackPawn)
+  return setPieceColor(player, whitePawn, blackPawn)
 }
 
 export default Pawn

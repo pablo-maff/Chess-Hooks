@@ -1,10 +1,10 @@
-import { setPieceColour } from "../../tools"
+import { setPieceColor } from "../../tools"
 
 const Rook = ({ player }) => {
   const whiteRook = '♖'
   const blackRook = '♜'
 
-  return setPieceColour(player, whiteRook, blackRook)
+  return setPieceColor(player, whiteRook, blackRook)
 }
 
 export default Rook

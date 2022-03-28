@@ -1,10 +1,10 @@
-import { setPieceColour } from "../../tools"
+import { setPieceColor } from "../../tools"
 
 const Bishop = ({ player }) => {
   const whiteBishop = '♗'
   const blackBishop = '♝'
 
-  return setPieceColour(player, whiteBishop, blackBishop)
+  return setPieceColor(player, whiteBishop, blackBishop)
 }
 
 export default Bishop

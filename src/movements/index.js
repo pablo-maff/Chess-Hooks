@@ -16,8 +16,6 @@ export const isMovePossible = (board, from, to) => {
   const playerInOrigin = board[from].piece.player
   const playerInDestination = board[to].piece.player
 
-  //console.log('isCheck=',isCheck(board, playerInOrigin))
-  
 
   if (isEnemyPiece(playerInOrigin, playerInDestination)) {
     if (pieceInOrigin === 'pawn') {

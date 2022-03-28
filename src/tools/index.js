@@ -96,7 +96,7 @@ export const initializeBoard = () => {
   return squares
 }
 
-export const setPieceColour = (player, whitePiece, blackPiece) => (
+export const setPieceColor = (player, whitePiece, blackPiece) => (
   player === 'white' ? whitePiece : blackPiece
 )
 
@@ -104,7 +104,7 @@ export const isEven = num => num % 2 === 0
 
 export const processMove = (board, from, to) => {
   const newBoard = [...board]
-  const piece = newBoard[from].piece
+  const piece = newBoard[from]?.piece
   
   // REMEMBER!!! returns a copy of the object with the specified values changed
   newBoard[from] = {
@@ -147,13 +147,14 @@ export const getPossibleMoves = (board, player) => {
 export const isCheck = (board, player) => {
   const opponent = player === 'white' ? 'black' : 'white'
   const playerKingPosition = getKingsPosition(board)
-  .filter(king => king.piece.player === player).map(king => king.id)
+    .filter(king => king.piece.player === player).map(king => king.id)
   const possibleMoves = getPossibleMoves(board, opponent)
   
   const canKillKing = () => {
     if (possibleMoves.includes(...playerKingPosition)) return true
     else return false
   }
+
   return canKillKing()
 }
 
