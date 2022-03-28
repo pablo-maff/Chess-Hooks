@@ -5,6 +5,7 @@ import Bishop from '../components/pieces/Bishop'
 import King from '../components/pieces/King'
 import Queen from '../components/pieces/Queen'
 import { isMovePossible } from '../movements'
+import { forEach } from 'lodash'
 
 export const renderPiece = (piece) => {
   if (piece.type === 'pawn')
@@ -129,36 +130,31 @@ export const getKingsPosition = (board) =>
 board.filter(square => board[square.id].piece.type === 'king')
 
 export const getPossibleMoves = (board, player) => {
-  const to = range(8, 40)
   // filter player pieces position
   const playerPiecesPos = board.filter(piece => piece.piece.player === player).map(piece => piece.id)
   // Evaluate possible moves of all of player pieces
-  //console.log('to', ...to);
-
-  // Need to make the reduce work properly by making it iterate through all possible destinations (all squares)
-  // Make the output a two dimensional array [[from, to], [from, to]]
-  console.log('playerPiecs', playerPiecesPos);
-  const possibMoves = playerPiecesPos.reduce((possibleMoves, move, i) => {
-    console.log('move',move, to[i]);
-    console.log('isPossible?',isMovePossible(board, move, to[i]));
-  if (isMovePossible(board, move, to[i])) possibleMoves.push(move, to[i])
-    return possibleMoves
-  }, [])
-
-  console.log('possible',possibMoves);
+  let possibleMoves = []
+  for (let to = 0; to < 64; to++) {
+    playerPiecesPos.reduce((possibMoves, move) => {
+      if (isMovePossible(board, move, to)) possibMoves.push(move, to)
+      return possibMoves
+    }, possibleMoves)
+  }
+  return possibleMoves
 }
   // need to find the position of all the opponent pieces and check if any of them has the
 // player's king on their path
 export const isCheck = (board, player) => {
   const opponent = player === 'white' ? 'black' : 'white'
-  console.log('opponent', opponent);
   const playerKingPosition = getKingsPosition(board)
   .filter(king => king.piece.player === player).map(king => king.id)
-  console.log('playersKingPosition', ...playerKingPosition);
+  const possibleMoves = getPossibleMoves(board, opponent)
   
   const canKillKing = () => {
+    if (possibleMoves.includes(...playerKingPosition)) return true
+    else return false
   }
-
+  return canKillKing()
 }
 
 export const isPlayerTurn = (turn, player) => turn === player ? true : false

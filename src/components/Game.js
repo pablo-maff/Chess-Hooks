@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { getKingsPosition, getPossibleMoves, initializeBoard, isPlayerTurn, processMove } from "../tools"
+import { getKingsPosition, getPossibleMoves, initializeBoard, isCheck, isPlayerTurn, processMove } from "../tools"
 import { isMovePossible } from "../movements"
 import Board from "./Board"
 
@@ -11,10 +11,11 @@ const Game = () => {
 
   if (checkMate) console.log('GAME OVER!');
   
-  getPossibleMoves(board, turn)
+  useEffect(() => {
+    isCheck(board, turn)
+  }, [board, turn])
   
   useEffect(() => {
-    console.log('EFFECT!');
     const from = selected[0]
     const to = selected[1]
     const kingPos = getKingsPosition(board)
