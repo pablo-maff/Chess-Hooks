@@ -133,6 +133,8 @@ export const getPossibleMoves = (board, player) => {
   // filter player pieces position
   const playerPiecesPos = board.filter(piece => piece.piece.player === player).map(piece => piece.id)
   // Evaluate possible moves of all of player pieces
+  
+  // TODO get rid of the for loop and only use reduce
   let possibleMoves = []
   for (let to = 0; to < 64; to++) {
     playerPiecesPos.reduce((possibMoves, move) => {

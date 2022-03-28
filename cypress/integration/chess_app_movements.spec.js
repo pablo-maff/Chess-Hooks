@@ -18,7 +18,7 @@ describe('Chess app', function() {
     })
   })
 
-  describe('Check', function() {
+  describe.only('Check', function() {
     it('can\'t move a piece that is not protecting from checkmate', function() {
       cy.move([52, 44, 11, 19, 61, 25, 12, 20]).contains('♟').should('not.exist')
     })

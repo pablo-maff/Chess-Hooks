@@ -19,38 +19,51 @@ const Game = () => {
     const kingPos = getKingsPosition(board)
     const canMove = isMovePossible(board, from, to)
     const isSelectedTurn = isPlayerTurn(turn, board[from]?.piece.player)
+    const pieceInSquare = board[from]?.piece.type
+    const isCheckForPlayer = isCheck(board, turn) 
     const possibleBoard = processMove(board, from, to)
     const evalCheckOnNextMove = isCheck(possibleBoard, turn)
     
+    // TODO If is checkmate without the need of destroying the king finish the game 
+    
     if (kingPos.length < 2) {
       setCheckMate(true)
+      return console.log('Game is Over');
     }
     
-    console.log('check',check);
-    const isCheckForPlayer = isCheck(board, turn) 
+    if (!canMove && to) {
+      setSelected([])
+      return console.log('That\'s not a valid move'); 
+    }
+
     if (isCheckForPlayer) setCheck(true)
-    
-    // TODO NEXT It works but needs changes. 
-    // Prevents check by own player opening path but it is buggy with the messages
-    if ((check && from && to && isSelectedTurn) || evalCheckOnNextMove) {
-      console.log('You have check, choose another move');
-      if (!isCheck(possibleBoard, turn)) {
-        console.log('Valid move');
-        setCheck(false)
-        setBoard(processMove(board, from, to))
-        setSelected([])
-        setTurn(turn === 'white' ? 'black' : 'white')
-      }
-      else if (selected.length === 2) setSelected([])
+
+    if (!pieceInSquare && from) {
+      setSelected([])
+      return console.log(('You can\'t play an empty square, please select a piece'));
+    }
+
+    if (!isSelectedTurn && pieceInSquare) {
+      setSelected([])
+      return console.log('Those are not your pieces!');
     }
     
-    else if (canMove && isSelectedTurn && !checkMate){
+    if (canMove && isSelectedTurn && !evalCheckOnNextMove && !checkMate){
+      if (check) setCheck(false)
       setBoard(processMove(board, from, to))
       setSelected([])
       setTurn(turn === 'white' ? 'black' : 'white')
     }
-    else if (selected.length === 2) setSelected([])
-
+    
+    else if (check && to) {
+      setSelected([])
+      console.log('That\'s check, try a different move');
+    }
+    
+    else if (!check && evalCheckOnNextMove && to) {
+      setSelected([])
+      return console.log('That will cause check, try another move')
+    }
 
   }, [board, selected, turn, checkMate, check])
 
