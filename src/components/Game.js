@@ -9,7 +9,6 @@ const Game = () => {
   const [turn, setTurn] = useState('white')
   const [check, setCheck] = useState(false)
   const [checkMate, setCheckMate] = useState(false)
-
   if (checkMate) console.log('GAME OVER!');
   
   
@@ -23,7 +22,6 @@ const Game = () => {
     const isCheckForPlayer = isCheck(board, turn) 
     const possibleBoard = processMove(board, from, to)
     const evalCheckOnNextMove = isCheck(possibleBoard, turn)
-    
     // TODO If is checkmate without the need of destroying the king finish the game 
     
     if (kingPos.length < 2) {
