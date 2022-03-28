@@ -60,7 +60,7 @@ const Game = () => {
       console.log('That\'s check, try a different move');
     }
     
-    else if (!check && evalCheckOnNextMove && to) {
+    else if (evalCheckOnNextMove && to) {
       setSelected([])
       return console.log('That will cause check, try another move')
     }
