@@ -5,7 +5,6 @@ import Bishop from '../components/pieces/Bishop'
 import King from '../components/pieces/King'
 import Queen from '../components/pieces/Queen'
 import { isMovePossible } from '../movements'
-import { forEach } from 'lodash'
 
 export const renderPiece = (piece) => {
   if (piece.type === 'pawn')
@@ -89,6 +88,7 @@ const defineSquare = (position) => {
 export const initializeBoard = () => {
   let squares = []
 
+  // TODO Replace this loop with reduce
   for (let i = 0; i <= 63; i++) {
     squares.push(defineSquare(i))
   }
@@ -135,6 +135,7 @@ export const getPossibleMoves = (board, player) => {
   // Evaluate possible moves of all of player pieces
   
   // TODO get rid of the for loop and only use reduce
+
   let possibleMoves = []
   for (let to = 0; to < 64; to++) {
     playerPiecesPos.reduce((possibMoves, move) => {

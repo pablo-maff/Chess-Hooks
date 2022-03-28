@@ -22,7 +22,8 @@ const Game = () => {
     const isCheckForPlayer = isCheck(board, turn) 
     const possibleBoard = processMove(board, from, to)
     const evalCheckOnNextMove = isCheck(possibleBoard, turn)
-    // TODO If is checkmate without the need of destroying the king finish the game 
+
+    // TODO If is checkmate without the need of destroying the king notify that the game is over
     
     if (kingPos.length < 2) {
       setCheckMate(true)

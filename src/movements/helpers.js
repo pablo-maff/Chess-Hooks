@@ -3,7 +3,8 @@ import columnDictionary from '../dictionaries/column.json'
 import diagonalDictionaryTLBR from '../dictionaries/diagonalTopLeftBottomRight.json'
 import diagonalDictionaryTRBL from '../dictionaries/diagonalTopRightBottomLeft.json'
 
-// TODO create a getPath function to not repeat code in every piece movement rules
+// TODO create a getPath function to not repeat code in every piece movement rules and to use it for checkmate notification
+// Move at least the first three functions to tools (they will be useful for other things as well), maybe all of them, will see
 
 export const isDestOccupied = (pieceInDestination) => {
   if (pieceInDestination === null) {

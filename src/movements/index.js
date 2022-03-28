@@ -6,8 +6,6 @@ import { isBishopMovePossible } from "./bishop";
 import { isQueenMovePossible } from "./queen";
 import { isKingMovePossible } from "./king";
 
-// TODO fix bug of square 0, pieces can't move there and the rook can only get out 
-// if is going to destroy a white piece
 export const isMovePossible = (board, from, to) => {
   if (!board) return null
   

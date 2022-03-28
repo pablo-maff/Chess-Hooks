@@ -7,7 +7,7 @@ export const isPawnMovePossible = (
   pieceInDestination,
   board) => {
 
-  // TODO define en passant rules after defining the turns system
+  // NEXT TODO define en passant rules after defining the turns system
   // WRITE the extra tests before implementing it!
 
   const initialPawnPositions = {
