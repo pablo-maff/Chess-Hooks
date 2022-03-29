@@ -131,15 +131,20 @@ board.filter(square => board[square.id].piece.type === 'king')
 
 export const getPossibleMoves = (board, player) => {
   // filter player pieces position
-  const playerPiecesPos = board.filter(piece => piece.piece.player === player).map(piece => piece.id)
+  const playerPiecesPos = board.filter(piece =>
+    piece.piece.player === player).map(piece => piece.id)
   // Evaluate possible moves of all of player pieces
-  
   // TODO get rid of the for loop and only use reduce
 
   let possibleMoves = []
   for (let to = 0; to < 64; to++) {
     playerPiecesPos.reduce((possibMoves, move) => {
-      if (isMovePossible(board, move, to)) possibMoves.push(move, to)
+      if (isMovePossible(board, move, to)) possibMoves.push({
+        piece: board[move].piece.type,
+        player: board[move].piece.player,
+        from: move,
+        to: to
+      })
       return possibMoves
     }, possibleMoves)
   }
@@ -170,7 +175,7 @@ export const isPlayerTurn = (turn, player) => turn === player ? true : false
 // it can only move straightforward if the square is empty
 
 export const pawnPromotion = (board, lastMove, player) => {
-  const opponent = player === 'white' ? 'black' : 'white'
+  //const opponent = player === 'white' ? 'black' : 'white'
   let lastPieceMoved
   if (lastMove.length) {
     lastMove = lastMove.slice(-1)[0][1]
@@ -180,9 +185,9 @@ export const pawnPromotion = (board, lastMove, player) => {
     white: range(8, 0),
     black: range(8, 56)
   }
-  const selectPromotionRow = opponent === 'white' ? promotionRow.white : promotionRow.black
-  console.log('promotionRow selected', selectPromotionRow);
-  console.log('includes last move?', selectPromotionRow.includes(lastMove));
+  const selectPromotionRow = player === 'white' ? promotionRow.white : promotionRow.black
+  //console.log('promotionRow selected', selectPromotionRow);
+  //console.log('includes last move?', selectPromotionRow.includes(lastMove));
   if (selectPromotionRow.includes(lastMove) && lastPieceMoved === 'pawn') return true
 
   return false

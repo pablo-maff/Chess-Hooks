@@ -5,6 +5,7 @@ import Board from "./Board"
 import Promotion from "./Promotion"
 
 const Game = () => {
+  const [promotion, setPromotion] = useState(false)
   const [board, setBoard] = useState(initializeBoard())
   const [selected, setSelected] = useState([])
   const [turn, setTurn] = useState('white')
@@ -12,7 +13,6 @@ const Game = () => {
   const [checkMate, setCheckMate] = useState(false)
   const [whiteMoves, setWhiteMoves] = useState([])
   const [blackMoves, setBlackMoves] = useState([])
-  const [promotion, setPromotion] = useState(false)
 
 
   if (checkMate) console.log('GAME OVER!');
@@ -40,8 +40,10 @@ const Game = () => {
     // Promotion is displayed for white pieces
     // NEXT TODO display it for black pieces as well and implement the logic for swapping pieces
     // Player in promotion should keep control and no other pieces can be moved until promotion is completed
-    console.log('promotion', promotion);
-    if (pawnPromotion(board,whiteMoves, turn)) setPromotion(true)
+    if (pawnPromotion(board,whiteMoves, turn)) {
+      setPromotion(true)
+      console.log('promotion', promotion);
+    }
 
     if (!canMove && to) {
       setSelected([])
