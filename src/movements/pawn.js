@@ -35,7 +35,7 @@ export const isPawnMovePossible = (
      && isPathClean(board, blackInitialPath) && !isDestOccupied(pieceInDestination))) {
       return true
     }
-    else if ((to === from + 7 || to === from + 9) && isDestOccupied()) {
+    else if ((to === from + 7 || to === from + 9) && isDestOccupied(pieceInDestination)) {
       return true
     }
   }

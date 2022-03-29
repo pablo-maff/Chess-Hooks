@@ -130,25 +130,34 @@ export const getKingsPosition = (board) =>
 board.filter(square => board[square.id].piece.type === 'king')
 
 export const getPossibleMoves = (board, player) => {
+  const opponent = player === 'white' ? 'black' : 'white'
+
   // filter player pieces position
   const playerPiecesPos = board.filter(piece =>
     piece.piece.player === player).map(piece => piece.id)
   // Evaluate possible moves of all of player pieces
   // TODO get rid of the for loop and only use reduce
-
-  let possibleMoves = []
+  const enemyPiecesPos = board.filter(piece =>
+    piece.piece.player === opponent).map(piece => piece.id)
+  
+  let playerPossibleMoves = []
   for (let to = 0; to < 64; to++) {
     playerPiecesPos.reduce((possibMoves, move) => {
       if (isMovePossible(board, move, to)) possibMoves.push({
         piece: board[move].piece.type,
         player: board[move].piece.player,
         from: move,
-        to: to
+        to: to,
+        canDestroy: null,
       })
       return possibMoves
-    }, possibleMoves)
+    }, playerPossibleMoves)
   }
-  return possibleMoves
+
+  playerPossibleMoves.filter(move => enemyPiecesPos.includes(move.to))
+    .map(m => playerPossibleMoves[m.from] = { ...m, canDestroy: board[m.to].piece.type })
+
+  return playerPossibleMoves
 }
   // need to find the position of all the opponent pieces and check if any of them has the
 // player's king on their path
