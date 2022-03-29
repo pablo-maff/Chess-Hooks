@@ -19,9 +19,9 @@ const Game = () => {
     const canMove = isMovePossible(board, from, to)
     const isSelectedTurn = isPlayerTurn(turn, board[from]?.piece.player)
     const pieceInSquare = board[from]?.piece.type
-    //const isCheckForPlayer = isCheck(board, turn) 
+    const isCheckForPlayer = isCheck(board, turn) 
     const possibleBoard = processMove(board, from, to)
-    //const evalCheckOnNextMove = isCheck(possibleBoard, turn)
+    const evalCheckOnNextMove = isCheck(possibleBoard, turn)
 
     // TODO If is checkmate without the need of destroying the king notify that the game is over
     
@@ -35,7 +35,7 @@ const Game = () => {
       return console.log('That\'s not a valid move'); 
     }
 
-    //if (isCheckForPlayer) setCheck(true)
+    if (isCheckForPlayer) setCheck(true)
 
     if (!pieceInSquare && from) {
       setSelected([])
@@ -47,7 +47,7 @@ const Game = () => {
       return console.log('Those are not your pieces!');
     }
     
-    if (canMove && isSelectedTurn /*&& !evalCheckOnNextMove*/ && !checkMate){
+    if (canMove && isSelectedTurn && !evalCheckOnNextMove && !checkMate){
       if (check) setCheck(false)
       setBoard(processMove(board, from, to))
       setSelected([])
@@ -59,7 +59,7 @@ const Game = () => {
       console.log('That\'s check, try a different move');
     }
     
-    else if (/*evalCheckOnNextMove &&*/ to) {
+    else if (evalCheckOnNextMove && to) {
       setSelected([])
       return console.log('That will cause check, try another move')
     }
