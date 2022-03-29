@@ -169,8 +169,13 @@ export const isPlayerTurn = (turn, player) => turn === player ? true : false
 // if in the last row there is no piece on the forward diagonal sides
 // it can only move straightforward if the square is empty
 
-export const pawnPromotion = (lastMove, player, piece) => {
+export const pawnPromotion = (board, lastMove, player) => {
   const opponent = player === 'white' ? 'black' : 'white'
+  let lastPieceMoved
+  if (lastMove.length) {
+    lastMove = lastMove.slice(-1)[0][1]
+    lastPieceMoved = board[lastMove]?.piece.type
+  }
   const promotionRow = {
     white: range(8, 0),
     black: range(8, 56)
@@ -178,7 +183,7 @@ export const pawnPromotion = (lastMove, player, piece) => {
   const selectPromotionRow = opponent === 'white' ? promotionRow.white : promotionRow.black
   console.log('promotionRow selected', selectPromotionRow);
   console.log('includes last move?', selectPromotionRow.includes(lastMove));
-  if (selectPromotionRow.includes(lastMove) && piece === 'pawn') return true
+  if (selectPromotionRow.includes(lastMove) && lastPieceMoved === 'pawn') return true
 
   return false
 }

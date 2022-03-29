@@ -29,6 +29,7 @@ const Game = () => {
     const possibleBoard = processMove(board, from, to)
     const evalCheckOnNextMove = isCheck(possibleBoard, turn)
     
+    
     // TODO If is checkmate without the need of destroying the king notify that the game is over
     
     if (kingPos.length < 2) {
@@ -39,12 +40,8 @@ const Game = () => {
     // Promotion is displayed for white pieces
     // NEXT TODO display it for black pieces as well and implement the logic for swapping pieces
     // Player in promotion should keep control and no other pieces can be moved until promotion is completed
-    let lastDestination
-    if (whiteMoves.length) {
-      lastDestination = whiteMoves.slice(-1)[0][1]
-      const lastPieceMoved = board[lastDestination]?.piece.type
-      if (pawnPromotion(lastDestination, turn, lastPieceMoved)) setPromotion(true)
-    }
+    console.log('promotion', promotion);
+    if (pawnPromotion(board,whiteMoves, turn)) setPromotion(true)
 
     if (!canMove && to) {
       setSelected([])
