@@ -85,7 +85,7 @@ describe('Chess app', function() {
       cy.get('#11').contains('♟')
     })
 
-    it('can promote', function () {
+    it.only('can promote', function () {
       cy.move([54, 38, 14, 30, 53, 37, 30, 37, 38, 30, 6, 21, 30, 22, 15, 23, 22, 14, 10, 18, 14, 6])
       cy.get('#6').contains('♕' || '♗' || '♘' || '♖')
     })

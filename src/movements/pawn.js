@@ -25,10 +25,6 @@ export const isPawnMovePossible = (
       black: range(8, 56)
     }
 
-    const possiblePieces = {
-      white: ['♕', '♗', '♘', '♖'],
-      black: ['♛', '♝', '♞' ,'♜']
-    }
     // if pawn reaches last row, prompt player to choose a piece for promotion
     // if in the last row there is no piece on the forward diagonal sides
     // it can only move straightforward if the square is empty

@@ -162,3 +162,23 @@ export const isCheck = (board, player) => {
 }
 
 export const isPlayerTurn = (turn, player) => turn === player ? true : false
+
+// TODO implement the logic for promotion
+
+// if pawn reaches last row, prompt player to choose a piece for promotion
+// if in the last row there is no piece on the forward diagonal sides
+// it can only move straightforward if the square is empty
+
+export const pawnPromotion = (lastMove, player, piece) => {
+  const opponent = player === 'white' ? 'black' : 'white'
+  const promotionRow = {
+    white: range(8, 0),
+    black: range(8, 56)
+  }
+  const selectPromotionRow = opponent === 'white' ? promotionRow.white : promotionRow.black
+  console.log('promotionRow selected', selectPromotionRow);
+  console.log('includes last move?', selectPromotionRow.includes(lastMove));
+  if (selectPromotionRow.includes(lastMove) && piece === 'pawn') return true
+
+  return false
+}
