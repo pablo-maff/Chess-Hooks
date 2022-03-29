@@ -31,6 +31,7 @@ const Board = ({ board, selectSquare }) => {
     />
   )
 
+  // TODO This should be replaced by flexbox to not have problems with screen resizing
   // Gives final shape to the board separating it by row
   const renderBoard = _.chunk(board, 8).map((square, i) =>
     <div key={i} className='board-row'>{square}</div>
