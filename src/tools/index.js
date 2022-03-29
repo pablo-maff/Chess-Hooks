@@ -136,10 +136,10 @@ export const getPossibleMoves = (board, player) => {
   const playerPiecesPos = board.filter(piece =>
     piece.piece.player === player).map(piece => piece.id)
   // Evaluate possible moves of all of player pieces
-  // TODO get rid of the for loop and only use reduce
   const enemyPiecesPos = board.filter(piece =>
     piece.piece.player === opponent).map(piece => piece.id)
-  
+    
+  // TODO get rid of the for loop and only use reduce
   let playerPossibleMoves = []
   for (let to = 0; to < 64; to++) {
     playerPiecesPos.reduce((possibMoves, move) => {
@@ -155,7 +155,7 @@ export const getPossibleMoves = (board, player) => {
   }
 
   playerPossibleMoves.filter(move => enemyPiecesPos.includes(move.to))
-    .map(m => playerPossibleMoves[m.from] = { ...m, canDestroy: board[m.to].piece.type })
+    .map(m => m.canDestroy = board[m.to].piece.type)
 
   return playerPossibleMoves
 }
