@@ -28,8 +28,7 @@ const Game = () => {
     const isCheckForPlayer = isCheck(board, turn) 
     const possibleBoard = processMove(board, from, to)
     const evalCheckOnNextMove = isCheck(possibleBoard, turn)
-    const lastPieceMoved = board[lastDestination]?.piece.type
-
+    
     // TODO If is checkmate without the need of destroying the king notify that the game is over
     
     if (kingPos.length < 2) {
@@ -43,6 +42,7 @@ const Game = () => {
     let lastDestination
     if (whiteMoves.length) {
       lastDestination = whiteMoves.slice(-1)[0][1]
+      const lastPieceMoved = board[lastDestination]?.piece.type
       if (pawnPromotion(lastDestination, turn, lastPieceMoved)) setPromotion(true)
     }
 
