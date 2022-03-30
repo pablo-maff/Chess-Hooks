@@ -132,14 +132,15 @@ board.filter(square => board[square.id].piece.type === 'king')
 export const getPossibleMoves = (board, player) => {
   const opponent = player === 'white' ? 'black' : 'white'
 
-  // filter player pieces position
+  // Get player pieces position
   const playerPiecesPos = board.filter(piece =>
     piece.piece.player === player).map(piece => piece.id)
-  // Evaluate possible moves of all of player pieces
+  // Get enemy pieces position
   const enemyPiecesPos = board.filter(piece =>
     piece.piece.player === opponent).map(piece => piece.id)
-    
+      
   // TODO get rid of the for loop and only use reduce
+  // Evaluate possible moves of all of player pieces
   let playerPossibleMoves = []
   for (let to = 0; to < 64; to++) {
     playerPiecesPos.reduce((possibMoves, move) => {
@@ -163,16 +164,13 @@ export const getPossibleMoves = (board, player) => {
 // player's king on their path
 export const isCheck = (board, player) => {
   const opponent = player === 'white' ? 'black' : 'white'
-  const playerKingPosition = getKingsPosition(board)
-    .filter(king => king.piece.player === player).map(king => king.id)
-  const possibleMoves = getPossibleMoves(board, opponent)
-  
-  const canKillKing = () => {
-    if (possibleMoves.includes(...playerKingPosition)) return true
-    else return false
-  }
+  // const playerKingPosition = getKingsPosition(board)
+  //   .filter(king => king.piece.player === player).map(king => king.id)
+  const possibleMoves = getPossibleMoves(board, opponent).filter(piece => piece.canDestroy === 'king')
+  console.log(possibleMoves);
+  if (possibleMoves.length) return true
+  else return false
 
-  return canKillKing()
 }
 
 export const isPlayerTurn = (turn, player) => turn === player ? true : false

@@ -18,7 +18,7 @@ describe('Chess app', function() {
     })
   })
 
-  describe('Check', function() {
+  describe.only('Check', function() {
     it('can\'t move a piece that is not protecting from checkmate', function() {
       cy.move([52, 44, 11, 19, 61, 25, 12, 20]).contains('♟').should('not.exist')
     })
@@ -28,8 +28,8 @@ describe('Chess app', function() {
     })
 
     it('pieces can\'t move after checkmate', function() {
-      cy.move([52, 44, 11, 19, 61, 25, 12, 20, 25, 4, 14, 22])
-      .contains('♟').should('not.exist')
+      cy.move([53, 45, 12, 20, 54, 38, 3, 39, 55, 47])
+      .contains('♙').should('not.exist')
     })
   })
 
@@ -85,7 +85,7 @@ describe('Chess app', function() {
       cy.get('#11').contains('♟')
     })
 
-    it.only('can promote', function () {
+    it('can promote', function () {
       cy.move([54, 38, 14, 30, 53, 37, 30, 37, 38, 30, 6, 21, 30, 22, 15, 23, 22, 14, 10, 18, 14, 6])
       cy.get('#6').contains('♕' || '♗' || '♘' || '♖')
     })

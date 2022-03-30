@@ -30,7 +30,6 @@ const Game = () => {
     const evalCheckOnNextMove = isCheck(possibleBoard, turn)
     const getPlayerPossibleMoves = getPossibleMoves(board, turn)
     
-    console.log(getPlayerPossibleMoves);
     // TODO If is checkmate without the need of destroying the king notify that the game is over
     
     if (kingPos.length < 2) {
