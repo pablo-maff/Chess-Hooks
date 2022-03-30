@@ -50,7 +50,7 @@ describe('Chess app', function() {
         .contains('♞')
     })
 
-    it.only('only pawns can promote', function() {
+    it('only pawns can promote', function() {
       cy.move([52, 36, 13, 29, 61, 34, 15, 23, 34, 6])
       cy.get('#prom-queen').should('not.exist')
     })

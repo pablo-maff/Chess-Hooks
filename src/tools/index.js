@@ -144,7 +144,7 @@ export const getPossibleMoves = (board, player) => {
   for (let to = 0; to < 64; to++) {
     playerPiecesPos.reduce((possibMoves, move) => {
       if (isMovePossible(board, move, to)) possibMoves.push({
-        piece: board[move].piece.type,
+        type: board[move].piece.type,
         player: board[move].piece.player,
         from: move,
         to: to,
@@ -176,7 +176,7 @@ export const isGoingToPromote = (board, player) => {
   }
   const selectPromotionRow = player === 'white' ? promotionRow.white : promotionRow.black
   const isGoingToPromote = getPossibleMoves(board, player).filter(pos =>
-    selectPromotionRow.includes(pos.to)).map(promSquares => (
+    selectPromotionRow.includes(pos.to) && pos.type === 'pawn').map(promSquares => (
       {
         player: promSquares.player,
         from: promSquares.from,
@@ -184,7 +184,6 @@ export const isGoingToPromote = (board, player) => {
       }))
 
   return isGoingToPromote
-  //else return false
 }
 
 export const acceptPromotion = (board, player, from, to) => {

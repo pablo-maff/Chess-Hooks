@@ -35,7 +35,7 @@ const Game = () => {
     const evalCheckOnNextMove = isCheck(possibleBoard, turn)
     //const playerPossibleMoves = getPossibleMoves(board, turn)
     const canPromoteOnNextMove = isGoingToPromote(board, turn)
-    console.log();
+
     // TODO If is checkmate without the need of destroying the king notify that the game is over
     if (kingPos.length < 2) {
       setCheckMate(true)
