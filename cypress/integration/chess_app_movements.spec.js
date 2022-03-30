@@ -18,7 +18,7 @@ describe('Chess app', function() {
     })
   })
 
-  describe.only('Check', function() {
+  describe('Check', function() {
     it('can\'t move a piece that is not protecting from checkmate', function() {
       cy.move([52, 44, 11, 19, 61, 25, 12, 20]).contains('♟').should('not.exist')
     })
@@ -30,6 +30,29 @@ describe('Chess app', function() {
     it('pieces can\'t move after checkmate', function() {
       cy.move([53, 45, 12, 20, 54, 38, 3, 39, 55, 47])
       .contains('♙').should('not.exist')
+    })
+  })
+
+  describe('Promotion', function(){
+    it('can promote', function () {
+      cy.move([54, 38, 14, 30, 53, 37, 30, 37, 38, 30, 6, 21, 30, 22, 15, 23, 22, 14, 10, 18, 14, 6])
+      cy.get('#prom-queen').click()
+      cy.get('#6').contains('♕')
+    })
+
+    it('can move any piece if player is about to promote', function() {
+      cy.move([54, 38, 14, 30, 53, 37, 30, 37, 38, 30, 6, 21, 30, 22, 15, 23, 22, 14, 10, 18, 55, 47])
+        .contains('♙')
+    })
+
+    it('can move any piece if player is about to promote and next turn belongs to his opponent', function() {
+      cy.move([54, 38, 14, 30, 53, 37, 30, 37, 38, 30, 6, 21, 30, 22, 15, 23, 22, 14, 10, 18, 55, 47, 1, 16])
+        .contains('♞')
+    })
+
+    it.only('only pawns can promote', function() {
+      cy.move([52, 36, 13, 29, 61, 34, 15, 23, 34, 6])
+      cy.get('#prom-queen').should('not.exist')
     })
   })
 
@@ -83,11 +106,6 @@ describe('Chess app', function() {
       cy.move([51, 35, 15, 23, 35, 27, 8, 16, 27, 19, 11, 27])
 
       cy.get('#11').contains('♟')
-    })
-
-    it('can promote', function () {
-      cy.move([54, 38, 14, 30, 53, 37, 30, 37, 38, 30, 6, 21, 30, 22, 15, 23, 22, 14, 10, 18, 14, 6])
-      cy.get('#6').contains('♕' || '♗' || '♘' || '♖')
     })
   })
 

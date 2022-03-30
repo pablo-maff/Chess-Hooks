@@ -119,7 +119,6 @@ export const processMove = (board, from, to) => {
     ...newBoard[to],
     piece
   }
-
   return newBoard
 }
 
@@ -160,42 +159,46 @@ export const getPossibleMoves = (board, player) => {
 
   return playerPossibleMoves
 }
-  // need to find the position of all the opponent pieces and check if any of them has the
-// player's king on their path
+
 export const isCheck = (board, player) => {
   const opponent = player === 'white' ? 'black' : 'white'
-  // const playerKingPosition = getKingsPosition(board)
-  //   .filter(king => king.piece.player === player).map(king => king.id)
-  const possibleMoves = getPossibleMoves(board, opponent).filter(piece => piece.canDestroy === 'king')
-  console.log(possibleMoves);
-  if (possibleMoves.length) return true
+  const canDestroyKing = getPossibleMoves(board, opponent).filter(piece => piece.canDestroy === 'king')
+  if (canDestroyKing.length) return true
   else return false
-
 }
 
 export const isPlayerTurn = (turn, player) => turn === player ? true : false
 
-// TODO implement the logic for promotion
-
-// if pawn reaches last row, prompt player to choose a piece for promotion
-// if in the last row there is no piece on the forward diagonal sides
-// it can only move straightforward if the square is empty
-
-export const pawnPromotion = (board, lastMove, player) => {
-  //const opponent = player === 'white' ? 'black' : 'white'
-  let lastPieceMoved
-  if (lastMove.length) {
-    lastMove = lastMove.slice(-1)[0][1]
-    lastPieceMoved = board[lastMove]?.piece.type
-  }
+export const isGoingToPromote = (board, player) => {
   const promotionRow = {
     white: range(8, 0),
     black: range(8, 56)
   }
   const selectPromotionRow = player === 'white' ? promotionRow.white : promotionRow.black
-  //console.log('promotionRow selected', selectPromotionRow);
-  //console.log('includes last move?', selectPromotionRow.includes(lastMove));
-  if (selectPromotionRow.includes(lastMove) && lastPieceMoved === 'pawn') return true
+  const isGoingToPromote = getPossibleMoves(board, player).filter(pos =>
+    selectPromotionRow.includes(pos.to)).map(promSquares => (
+      {
+        player: promSquares.player,
+        from: promSquares.from,
+        to: promSquares.to
+      }))
 
-  return false
+  return isGoingToPromote
+  //else return false
+}
+
+export const acceptPromotion = (board, player, from, to) => {
+  const possiblePromPos = isGoingToPromote(board, player)
+  if (possiblePromPos.some(move => move.from === from && move.to === to)) {
+    return processMove(board, from, to)
+  }
+}
+
+export const processPromotion = (board, from, piece) => {
+  const newBoard = [...board]
+  newBoard[from] = {
+    ...newBoard[from],
+    piece
+  }
+  return newBoard
 }
