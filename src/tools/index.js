@@ -119,7 +119,6 @@ export const processMove = (board, from, to) => {
     ...newBoard[to],
     piece
   }
-
   return newBoard
 }
 
@@ -130,35 +129,75 @@ export const getKingsPosition = (board) =>
 board.filter(square => board[square.id].piece.type === 'king')
 
 export const getPossibleMoves = (board, player) => {
-  // filter player pieces position
-  const playerPiecesPos = board.filter(piece => piece.piece.player === player).map(piece => piece.id)
-  // Evaluate possible moves of all of player pieces
-  
-  // TODO get rid of the for loop and only use reduce
+  const opponent = player === 'white' ? 'black' : 'white'
 
-  let possibleMoves = []
+  // Get player pieces position
+  const playerPiecesPos = board.filter(piece =>
+    piece.piece.player === player).map(piece => piece.id)
+  // Get enemy pieces position
+  const enemyPiecesPos = board.filter(piece =>
+    piece.piece.player === opponent).map(piece => piece.id)
+      
+  // TODO get rid of the for loop and only use reduce
+  // Evaluate possible moves of all of player pieces
+  let playerPossibleMoves = []
   for (let to = 0; to < 64; to++) {
     playerPiecesPos.reduce((possibMoves, move) => {
-      if (isMovePossible(board, move, to)) possibMoves.push(move, to)
+      if (isMovePossible(board, move, to)) possibMoves.push({
+        type: board[move].piece.type,
+        player: board[move].piece.player,
+        from: move,
+        to: to,
+        canDestroy: null,
+      })
       return possibMoves
-    }, possibleMoves)
-  }
-  return possibleMoves
-}
-  // need to find the position of all the opponent pieces and check if any of them has the
-// player's king on their path
-export const isCheck = (board, player) => {
-  const opponent = player === 'white' ? 'black' : 'white'
-  const playerKingPosition = getKingsPosition(board)
-    .filter(king => king.piece.player === player).map(king => king.id)
-  const possibleMoves = getPossibleMoves(board, opponent)
-  
-  const canKillKing = () => {
-    if (possibleMoves.includes(...playerKingPosition)) return true
-    else return false
+    }, playerPossibleMoves)
   }
 
-  return canKillKing()
+  playerPossibleMoves.filter(move => enemyPiecesPos.includes(move.to))
+    .map(m => m.canDestroy = board[m.to].piece.type)
+
+  return playerPossibleMoves
+}
+
+export const isCheck = (board, player) => {
+  const opponent = player === 'white' ? 'black' : 'white'
+  const canDestroyKing = getPossibleMoves(board, opponent).filter(piece => piece.canDestroy === 'king')
+  if (canDestroyKing.length) return true
+  else return false
 }
 
 export const isPlayerTurn = (turn, player) => turn === player ? true : false
+
+export const isGoingToPromote = (board, player) => {
+  const promotionRow = {
+    white: range(8, 0),
+    black: range(8, 56)
+  }
+  const selectPromotionRow = player === 'white' ? promotionRow.white : promotionRow.black
+  const isGoingToPromote = getPossibleMoves(board, player).filter(pos =>
+    selectPromotionRow.includes(pos.to) && pos.type === 'pawn').map(promSquares => (
+      {
+        player: promSquares.player,
+        from: promSquares.from,
+        to: promSquares.to
+      }))
+
+  return isGoingToPromote
+}
+
+export const acceptPromotion = (board, player, from, to) => {
+  const possiblePromPos = isGoingToPromote(board, player)
+  if (possiblePromPos.some(move => move.from === from && move.to === to)) {
+    return processMove(board, from, to)
+  }
+}
+
+export const processPromotion = (board, from, piece) => {
+  const newBoard = [...board]
+  newBoard[from] = {
+    ...newBoard[from],
+    piece
+  }
+  return newBoard
+}

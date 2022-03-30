@@ -11,7 +11,6 @@ const Square = ({ shade, selectSquare, style, keyVal, piece }) => {
       key={keyVal}
     >
       {renderPiece(piece)}
-      {keyVal}
     </button>
   )
 }

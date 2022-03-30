@@ -18,22 +18,6 @@ export const isPawnMovePossible = (
   const whiteInitialPath = [from - 8]
   const blackInitialPath = [from + 8]
 
-  // TODO implement the logic for promotion
-  const pawnPromotion = () => {
-    const promotionRow = {
-      white: range(8, 0),
-      black: range(8, 56)
-    }
-
-    const possiblePieces = {
-      white: ['♕', '♗', '♘', '♖'],
-      black: ['♛', '♝', '♞' ,'♜']
-    }
-    // if pawn reaches last row, prompt player to choose a piece for promotion
-    // if in the last row there is no piece on the forward diagonal sides
-    // it can only move straightforward if the square is empty
-}
-
   if (playerInOrigin === 'white') {
     if (((to === from - 8) && !isDestOccupied(pieceInDestination)) || 
       ((to === from - 16 && initialPawnPositions[playerInOrigin].includes(from))
@@ -51,7 +35,7 @@ export const isPawnMovePossible = (
      && isPathClean(board, blackInitialPath) && !isDestOccupied(pieceInDestination))) {
       return true
     }
-    else if ((to === from + 7 || to === from + 9) && isDestOccupied()) {
+    else if ((to === from + 7 || to === from + 9) && isDestOccupied(pieceInDestination)) {
       return true
     }
   }
