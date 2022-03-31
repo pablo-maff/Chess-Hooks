@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { acceptPromotion, getKingsPosition, getPossibleMoves, initializeBoard, isCheck, isGoingToPromote, isPlayerTurn, processMove, processPromotion, saveMovementHistory } from "../tools"
+import { acceptPromotion, castlingAllowed, getKingsPosition, getPossibleMoves, initializeBoard, isCheck, isGoingToPromote, isPlayerTurn, processCastle, processMove, processPromotion, saveMovementHistory } from "../tools"
 import { isMovePossible } from "../movements"
 import Board from "./Board"
 import Promotion from "./Promotion"
@@ -15,9 +15,8 @@ const Game = () => {
   const [pendingPromotion, setPendingPromotion] = useState(false)
   const [promotion, setPromotion] = useState(false)
   const [promSelectedPiece, setPromSelectedPiece] = useState(false)
+  const [castling, setCastling] = useState(false)
 
-  console.log('whiteMovesHistory', whiteMovesHistory);
-  console.log('blackMoveshistory', blackMovesHistory);
   if (checkMate) console.log('GAME OVER!');
 
   const selectPromotedPiece = (e) => {
@@ -27,7 +26,6 @@ const Game = () => {
   useEffect(() => {
     const [from, to] = selected
     const kingPos = getKingsPosition(board)
-    const canMove = isMovePossible(board, from, to)
     const isSelectedTurn = isPlayerTurn(turn, board[from]?.piece.player)
     const pieceInSquare = board[from]?.piece.type
     const isCheckForPlayer = isCheck(board, turn) 
@@ -35,18 +33,37 @@ const Game = () => {
     const evalCheckOnNextMove = isCheck(possibleBoard, turn)
     //const playerPossibleMoves = getPossibleMoves(board, turn)
     const canPromoteOnNextMove = isGoingToPromote(board, turn)
+    const canCastle = castlingAllowed(board, turn, whiteMovesHistory, to, check)
+    const canMove = isMovePossible(board, from, to, turn, whiteMovesHistory, check)
+
+    console.log('canCastle', canCastle);
 
     // TODO If is checkmate without the need of destroying the king notify that the game is over
     if (kingPos.length < 2) {
       setCheckMate(true)
       return console.log('Game is Over');
     }
+
+    if (canCastle && !castling) {
+      setCastling(true)
+      console.log('CASTLE!');
+      setBoard(processCastle(board, from, to))
+      setSelected([63, 61])
+      
+      //setBoard(processMove(board, 63, 61))
+    }
+
+    if (castling) {
+      setBoard(processMove(board, 63, 61))
+      setCastling(false)
+      setSelected([])
+    }
     
     if (canPromoteOnNextMove.length && !pendingPromotion) {
       //console.log('PENDING PROMOTION SET TO TRUE');
       setPendingPromotion(true)
     }
-
+    
     if (promotion && promSelectedPiece) {
       //console.log('PROMOTION IS FUCKING YOU UP');
       const selectedPiece = {
@@ -58,6 +75,7 @@ const Game = () => {
       setPromotion(false)
       setTurn(turn === 'white' ? 'black' : 'white')
     }
+    
 
     else if (pendingPromotion && canPromoteOnNextMove.some(p => p.player === turn) &&
     canPromoteOnNextMove.some(p => p.to === to)) {
@@ -91,8 +109,9 @@ const Game = () => {
       setSelected([])
       return console.log('Those are not your pieces!');
     }
+
     else if (canMove && isSelectedTurn && !evalCheckOnNextMove && !checkMate){
-      //console.log('MOVE IS FUCKING YOU UP');
+      console.log('MOVE IS FUCKING YOU UP');
       setBoard(processMove(board, from, to))
       if (check) setCheck(false)
       if (turn === 'white') setWhiteMovesHistory(whiteMovesHistory.concat(saveMovementHistory(from, to, turn, pieceInSquare)))
@@ -112,7 +131,7 @@ const Game = () => {
       setSelected([])
       return console.log('That will cause check, try another move')
     }
-  }, [board, selected, turn, checkMate, check, promotion, pendingPromotion, promSelectedPiece])
+  }, [board, selected, turn, checkMate, check, promotion, pendingPromotion, promSelectedPiece, whiteMovesHistory, blackMovesHistory])
 
   // if contains a piece select square then select another square to move the piece
   const selectPiecePath = (boardId) => {

@@ -223,16 +223,42 @@ export const saveMovementHistory = (from, to, player, piece) => {
     blackNum++
     return blackMoveObj
   }
-} 
+}
 
-export const castlingAllowed = (board, player) => {
+export const castlingAllowed = (board, player, movesHistory, to, check) => {
   // - Neither king or rook has moved
   //    Get movement history and check if they have not moved
   // - There must not be any pieces between the king and the rook
   //    Check path squares
   // - The king may not be in check
   //    Perform check checking
-  // - The square the king goes and its path may not be in check
-  //    Perform check checking on this squares
+  // - The square the king goes and its path may not be under atack
+  //    Perform atack checking on this squares
   // - If rook is under attack castling is allowed
-} 
+  const opponent = player === 'white' ? 'black' : 'white'
+  const movesHistoryFrom = movesHistory.from
+  const opponentPossibleMoves = getPossibleMoves(board, opponent)
+  const shortWhiteKing = 62
+  const longWhiteKing = 58
+  const shortBlackKing = 6
+  const longBlackKing = 2
+  const longWhiteRook = 56
+  const shortWhiteRook = 63
+  const longBlackRook = 0
+  const shortBlackRook = 7
+
+  if (movesHistory.find(piece => piece === 'king')) return false
+
+  else if (shortWhiteKing === to && !movesHistory.find(move => move.from === shortWhiteRook)
+    && !board[61].piece.type && !board[62].piece.type && !check
+    && !opponentPossibleMoves.find(move => move.to === (61 || 62))) {
+      return true
+  }
+  return false
+}
+
+export const processCastle = (board, from, to, piece) => {
+  let newBoard = processMove(board, from, to)
+  //processMove(board, 63, 61)
+  return newBoard
+}

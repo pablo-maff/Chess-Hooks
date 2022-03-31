@@ -56,6 +56,13 @@ describe('Chess app', function() {
     })
   })
 
+  describe('Castling', function() {
+    it.only('white can short castle', function() {
+      cy.move([52, 44, 11, 19, 61, 34, 10, 18, 62, 47, 9, 17, 60, 62])
+        .contains('♔')
+    })
+  })
+
   describe('Pawns', function() {
     it('can move forward only one square if not in initial position', function() {
       cy.move([55, 47, 8, 16, 47, 31])
