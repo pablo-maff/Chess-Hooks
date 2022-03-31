@@ -201,3 +201,38 @@ export const processPromotion = (board, from, piece) => {
   }
   return newBoard
 }
+
+let [whiteNum, blackNum] = [1, 1]
+export const saveMovementHistory = (from, to, player, piece) => {
+  const moveObj = {
+    moveNum: null,
+    piece,
+    from,
+    to
+  }
+  
+  if (player === 'white') {
+    let whiteMoveObj = {...moveObj}
+    whiteMoveObj.moveNum = whiteNum
+    whiteNum++
+    return whiteMoveObj
+  }
+  else {
+    let blackMoveObj = {...moveObj}
+    blackMoveObj.moveNum = blackNum
+    blackNum++
+    return blackMoveObj
+  }
+} 
+
+export const castlingAllowed = (board, player) => {
+  // - Neither king or rook has moved
+  //    Get movement history and check if they have not moved
+  // - There must not be any pieces between the king and the rook
+  //    Check path squares
+  // - The king may not be in check
+  //    Perform check checking
+  // - The square the king goes and its path may not be in check
+  //    Perform check checking on this squares
+  // - If rook is under attack castling is allowed
+} 
