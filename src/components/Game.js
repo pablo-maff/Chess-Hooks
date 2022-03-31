@@ -34,7 +34,7 @@ const Game = () => {
     //const playerPossibleMoves = getPossibleMoves(board, turn)
     const canPromoteOnNextMove = isGoingToPromote(board, turn)
     const canCastle = castlingAllowed(board, turn, whiteMovesHistory, to, check)
-    const canMove = isMovePossible(board, from, to, turn, whiteMovesHistory, check)
+    const canMove = isMovePossible(board, from, to)
 
     console.log('canCastle', canCastle);
 

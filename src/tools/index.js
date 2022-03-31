@@ -247,10 +247,21 @@ export const castlingAllowed = (board, player, movesHistory, to, check) => {
   const longBlackRook = 0
   const shortBlackRook = 7
 
+  const shortWhiteCastlingPath = [61, 62]
+
+  const checkPath = (board, path) => {
+    for (let square of path) {
+      if (board[square].piece.type) return false
+    }
+    return true
+  }
+
+  console.log('movesHistory', typeof movesHistory);
+
   if (movesHistory.find(piece => piece === 'king')) return false
 
   else if (shortWhiteKing === to && !movesHistory.find(move => move.from === shortWhiteRook)
-    && !board[61].piece.type && !board[62].piece.type && !check
+    && checkPath(board, shortWhiteCastlingPath) && !check
     && !opponentPossibleMoves.find(move => move.to === (61 || 62))) {
       return true
   }

@@ -7,7 +7,6 @@ const Board = ({ board, selectSquare }) => {
   let initialShade = useRef(false)
   let shade = useRef('')
 
-  console.log('board', board);
   const selectShade = (squareId) => {
     const row = squareId % 8 === 0
 
