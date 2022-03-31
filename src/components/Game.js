@@ -4,6 +4,7 @@ import { isMovePossible } from "../movements"
 import Board from "./Board"
 import Promotion from "./Promotion"
 
+// TODO en passant and castling
 const Game = () => {
   const [board, setBoard] = useState(initializeBoard())
   const [selected, setSelected] = useState([])
