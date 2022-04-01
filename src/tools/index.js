@@ -201,3 +201,79 @@ export const processPromotion = (board, from, piece) => {
   }
   return newBoard
 }
+
+let moveNum = 1
+export const saveMovementHistory = (from, to, player, piece) => {
+  let moveObj = {moveNumber: moveNum}
+  if (player === 'white') {
+    moveObj = {...moveObj, white: {piece, player, from, to}}
+  }
+
+  if(player === 'black') {    
+    moveObj = {...moveObj, black: {piece, player, from, to}}
+    moveNum++
+  }
+  return moveObj
+}
+
+export const castlingAllowed = (board, player, movesHistory, to, check) => {
+  // - Neither king or rook has moved
+  //    Get movement history and check if they have not moved
+  // - There must not be any pieces between the king and the rook
+  //    Check path squares
+  // - The king may not be in check
+  //    Perform check checking
+  // - The square the king goes and its path may not be under atack
+  //    Perform atack checking on this squares
+  // - If rook is under attack castling is allowed
+  const opponent = player === 'white' ? 'black' : 'white'
+  const opponentPossibleMoves = getPossibleMoves(board, opponent)
+  const shortWhiteKing = 62
+  const longWhiteKing = 58
+  const shortBlackKing = 6
+  const longBlackKing = 2
+  const longWhiteRook = 56
+  const shortWhiteRook = 63
+  const longBlackRook = 0
+  const shortBlackRook = 7
+
+  const shortWhiteCastlingPath = [61, 62]
+  const longWhiteCastlingPath = [57, 58, 59]
+  const shortBlackCastlingPath = [5, 6]
+  const longBlackCastlingPath = [1, 2, 3]
+
+  const checkPath = (board, path) => {
+    for (let square of path) {
+      if (board[square].piece.type) return false
+    }
+    return true
+  }
+  
+  if (movesHistory.find(piece => piece.piece === 'king' && piece.player === player)) return false
+
+  else if (shortWhiteKing === to && !movesHistory.find(move => move.from === shortWhiteRook)
+    && checkPath(board, shortWhiteCastlingPath) && !check
+    && !opponentPossibleMoves.find(move => move.to === (61 || 62))) {
+      return true
+  }
+
+  else if (longWhiteKing === to && !movesHistory.find(move => move.from === longWhiteRook)
+  && checkPath(board, longWhiteCastlingPath) && !check
+  && !opponentPossibleMoves.find(move => move.to === (57 || 58 || 59))) {
+    return true
+  }
+
+  else if (shortBlackKing === to && !movesHistory.find(move => move.from === shortBlackRook)
+  && checkPath(board, shortBlackCastlingPath) && !check
+  && !opponentPossibleMoves.find(move => move.to === (5 || 6))) {
+    return true
+  }
+
+  else if (longBlackKing === to && !movesHistory.find(move => move.from === longBlackRook)
+  && checkPath(board, longBlackCastlingPath) && !check
+  && !opponentPossibleMoves.find(move => move.to === (1 || 2 || 3))) {
+    return true
+  }
+
+  return false
+}
