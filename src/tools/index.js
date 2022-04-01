@@ -204,13 +204,13 @@ export const processPromotion = (board, from, piece) => {
 
 // IT works but is bugged and for sure that not following good practices
 let moveObj = {}
-export const saveMovementHistory = (from, to, player, piece, castling) => {
+export const saveMovementHistory = (from, to, player, piece) => {
   if (player === 'white') {
-    moveObj = {...moveObj, white: {piece, from, to, castling}}
+    moveObj = {...moveObj, white: {piece, player, from, to}}
   }
 
   if(player === 'black') {    
-    moveObj.black = {piece, from, to, castling}
+    moveObj.black = {piece, player, from, to}
   }
   return moveObj
 }
@@ -238,6 +238,8 @@ export const castlingAllowed = (board, player, movesHistory, to, check) => {
 
   const shortWhiteCastlingPath = [61, 62]
   const longWhiteCastlingPath = [57, 58, 59]
+  const shortBlackCastlingPath = [5, 6]
+  const longBlackCastlingPath = [1, 2, 3]
 
   const checkPath = (board, path) => {
     for (let square of path) {
@@ -245,7 +247,8 @@ export const castlingAllowed = (board, player, movesHistory, to, check) => {
     }
     return true
   }
-  if (movesHistory.find(piece => piece === 'king')) return false
+  
+  if (movesHistory.find(piece => piece.piece === 'king' && piece.player === player)) return false
 
   else if (shortWhiteKing === to && !movesHistory.find(move => move.from === shortWhiteRook)
     && checkPath(board, shortWhiteCastlingPath) && !check
@@ -257,6 +260,19 @@ export const castlingAllowed = (board, player, movesHistory, to, check) => {
   && checkPath(board, longWhiteCastlingPath) && !check
   && !opponentPossibleMoves.find(move => move.to === (57 || 58 || 59))) {
     return true
-}
+  }
+
+  else if (shortBlackKing === to && !movesHistory.find(move => move.from === shortBlackRook)
+  && checkPath(board, shortBlackCastlingPath) && !check
+  && !opponentPossibleMoves.find(move => move.to === (5 || 6))) {
+    return true
+  }
+
+  else if (longBlackKing === to && !movesHistory.find(move => move.from === longBlackRook)
+  && checkPath(board, longBlackCastlingPath) && !check
+  && !opponentPossibleMoves.find(move => move.to === (1 || 2 || 3))) {
+    return true
+  }
+
   return false
 }

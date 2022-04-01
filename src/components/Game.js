@@ -40,7 +40,7 @@ const Game = () => {
     const shortBlackRook = [7, 5]
     const longBlackRook = [0, 3]
 
-    console.log('gameObj', movesHistory);
+    //console.log('gameObj', movesHistory);
     // TODO If is checkmate without the need of destroying the king notify that the game is over
     if (kingPos.length < 2) {
       setCheckMate(true)
@@ -68,8 +68,8 @@ const Game = () => {
     if (canCastle && !castling) {
       setCastling(true)
       setBoard(processMove(board, from, to))
-      if (turn === 'white') setMovesHistory(movesHistory.concat(saveMovementHistory(from, to, turn, pieceInSquare, true)))
-      if (turn === 'black') setMovesHistory(movesHistory.concat(saveMovementHistory(from, to, turn, pieceInSquare, true)))
+      if (turn === 'white') setMovesHistory(movesHistory.concat(saveMovementHistory(from, to, turn, pieceInSquare)))
+      if (turn === 'black') setMovesHistory(movesHistory.concat(saveMovementHistory(from, to, turn, pieceInSquare)))
       const [shortWhite, longWhite, shortBlack, longBlack] = [to === 62, to === 58, to === 6, to === 2]
       const rookToCastle = shortWhite ? shortWhiteRook : longWhite ? longWhiteRook : shortBlack ? shortBlackRook : longBlack ? longBlackRook : false
       console.log('rook',rookToCastle);
@@ -78,18 +78,18 @@ const Game = () => {
 
     else if (castling) {
       console.log('from', from, 'to', to);
-      console.log('Fucking CASTLE');
       setBoard(processMove(board, from, to))
       setCastling(false)
       setSelected([])
+      setTurn(turn === 'white' ? 'black' : 'white')
     }
 
     else if (pendingPromotion && canPromoteOnNextMove.some(p => p.player === turn) &&
     canPromoteOnNextMove.some(p => p.to === to)) {
       console.log('PENDING PROMOTION IS FUCKING YOU UP')
       setBoard(acceptPromotion(board, turn, from, to))
-      if (turn === 'white') setMovesHistory(movesHistory.concat(saveMovementHistory(from, to, turn, pieceInSquare, false)))
-      if (turn === 'black') setMovesHistory(movesHistory.concat(saveMovementHistory(from, to, turn, pieceInSquare, false)))
+      if (turn === 'white') setMovesHistory(movesHistory.concat(saveMovementHistory(from, to, turn, pieceInSquare)))
+      if (turn === 'black') setMovesHistory(movesHistory.concat(saveMovementHistory(from, to, turn, pieceInSquare)))
       setPendingPromotion(false)
       setPromotion(true)
       setSelected([to])
@@ -121,8 +121,8 @@ const Game = () => {
       console.log('MOVE IS FUCKING YOU UP');
       setBoard(processMove(board, from, to))
       if (check) setCheck(false)
-      if (turn === 'white') setMovesHistory(movesHistory.concat(saveMovementHistory(from, to, turn, pieceInSquare, false)))
-      if (turn === 'black') setBlackMovesHistory(movesHistory.concat(saveMovementHistory(from, to, turn, pieceInSquare, false)))
+      if (turn === 'white') setMovesHistory(movesHistory.concat(saveMovementHistory(from, to, turn, pieceInSquare)))
+      if (turn === 'black') setBlackMovesHistory(movesHistory.concat(saveMovementHistory(from, to, turn, pieceInSquare)))
       setSelected([])
       setTurn(turn === 'white' ? 'black' : 'white')
     }

@@ -66,6 +66,22 @@ describe('Chess app', function() {
       cy.move([51, 43, 8, 16, 58, 37, 9, 17, 51, 43, 10, 18, 59, 51, 11, 19, 57, 40, 12, 20, 60, 58])
         .contains('♔').get('#59').contains('♖')
     })
+
+    it('black can short castle', function() {
+      cy.move([55, 47, 12, 20, 54, 46, 5, 19, 53, 45, 6, 23, 52, 44, 4, 6])
+        .contains('♚').get('#5').contains('♜')
+    })
+
+    it('black can long castle', function() {
+      cy.move([55, 47, 11, 27, 48, 40, 2, 29, 49, 41, 3, 19, 50, 42, 1, 16, 51, 35, 4, 2])
+        .contains('♚').get('#3').contains('♜')
+    })
+
+    it('both players can castle', function() {
+      cy.move([52, 44, 12, 28, 61, 34, 5, 26, 62, 47, 6, 23, 60, 62])
+        .contains('♔').get('#61').contains('♖').move([4, 6])
+        .contains('♚').get('#5').contains('♜')
+    })
   })
 
   describe('Pawns', function() {
