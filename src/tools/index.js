@@ -202,27 +202,17 @@ export const processPromotion = (board, from, piece) => {
   return newBoard
 }
 
-let [whiteNum, blackNum] = [1, 1]
-export const saveMovementHistory = (from, to, player, piece) => {
-  const moveObj = {
-    moveNum: null,
-    piece,
-    from,
-    to
-  }
-  
+// IT works but is bugged and for sure that not following good practices
+let moveObj = {}
+export const saveMovementHistory = (from, to, player, piece, castling) => {
   if (player === 'white') {
-    let whiteMoveObj = {...moveObj}
-    whiteMoveObj.moveNum = whiteNum
-    whiteNum++
-    return whiteMoveObj
+    moveObj = {...moveObj, white: {piece, from, to, castling}}
   }
-  else {
-    let blackMoveObj = {...moveObj}
-    blackMoveObj.moveNum = blackNum
-    blackNum++
-    return blackMoveObj
+
+  if(player === 'black') {    
+    moveObj.black = {piece, from, to, castling}
   }
+  return moveObj
 }
 
 export const castlingAllowed = (board, player, movesHistory, to, check) => {
@@ -236,7 +226,6 @@ export const castlingAllowed = (board, player, movesHistory, to, check) => {
   //    Perform atack checking on this squares
   // - If rook is under attack castling is allowed
   const opponent = player === 'white' ? 'black' : 'white'
-  const movesHistoryFrom = movesHistory.from
   const opponentPossibleMoves = getPossibleMoves(board, opponent)
   const shortWhiteKing = 62
   const longWhiteKing = 58
@@ -248,6 +237,7 @@ export const castlingAllowed = (board, player, movesHistory, to, check) => {
   const shortBlackRook = 7
 
   const shortWhiteCastlingPath = [61, 62]
+  const longWhiteCastlingPath = [57, 58, 59]
 
   const checkPath = (board, path) => {
     for (let square of path) {
@@ -255,9 +245,6 @@ export const castlingAllowed = (board, player, movesHistory, to, check) => {
     }
     return true
   }
-
-  console.log('movesHistory', typeof movesHistory);
-
   if (movesHistory.find(piece => piece === 'king')) return false
 
   else if (shortWhiteKing === to && !movesHistory.find(move => move.from === shortWhiteRook)
@@ -265,11 +252,11 @@ export const castlingAllowed = (board, player, movesHistory, to, check) => {
     && !opponentPossibleMoves.find(move => move.to === (61 || 62))) {
       return true
   }
-  return false
-}
 
-export const processCastle = (board, from, to, piece) => {
-  let newBoard = processMove(board, from, to)
-  //processMove(board, 63, 61)
-  return newBoard
+  else if (longWhiteKing === to && !movesHistory.find(move => move.from === longWhiteRook)
+  && checkPath(board, longWhiteCastlingPath) && !check
+  && !opponentPossibleMoves.find(move => move.to === (57 || 58 || 59))) {
+    return true
+}
+  return false
 }

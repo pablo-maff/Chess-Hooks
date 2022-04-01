@@ -56,10 +56,15 @@ describe('Chess app', function() {
     })
   })
 
-  describe('Castling', function() {
-    it.only('white can short castle', function() {
+  describe.only('Castling', function() {
+    it('white can short castle', function() {
       cy.move([52, 44, 11, 19, 61, 34, 10, 18, 62, 47, 9, 17, 60, 62])
-        .contains('♔')
+        .contains('♔').get('#61').contains('♖')
+    })
+
+    it('white can long castle', function() {
+      cy.move([51, 43, 8, 16, 58, 37, 9, 17, 51, 43, 10, 18, 59, 51, 11, 19, 57, 40, 12, 20, 60, 58])
+        .contains('♔').get('#59').contains('♖')
     })
   })
 
