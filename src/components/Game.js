@@ -40,7 +40,7 @@ const Game = () => {
     const shortBlackRook = [7, 5]
     const longBlackRook = [0, 3]
 
-    //console.log('gameObj', movesHistory);
+    console.log('gameObj', movesHistory);
     // TODO If is checkmate without the need of destroying the king notify that the game is over
     if (kingPos.length < 2) {
       setCheckMate(true)

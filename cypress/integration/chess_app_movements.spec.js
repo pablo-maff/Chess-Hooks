@@ -56,7 +56,7 @@ describe('Chess app', function() {
     })
   })
 
-  describe.only('Castling', function() {
+  describe('Castling', function() {
     it('white can short castle', function() {
       cy.move([52, 44, 11, 19, 61, 34, 10, 18, 62, 47, 9, 17, 60, 62])
         .contains('♔').get('#61').contains('♖')

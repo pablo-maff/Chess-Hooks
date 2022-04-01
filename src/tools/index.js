@@ -202,17 +202,18 @@ export const processPromotion = (board, from, piece) => {
   return newBoard
 }
 
-// IT works but is bugged and for sure that not following good practices
 let moveObj = {}
 export const saveMovementHistory = (from, to, player, piece) => {
-  if (player === 'white') {
-    moveObj = {...moveObj, white: {piece, player, from, to}}
-  }
+    if (player === 'white') {
+      moveObj = {...moveObj, white: {piece, player, from, to}}
+      delete moveObj.black
+    }
 
-  if(player === 'black') {    
-    moveObj.black = {piece, player, from, to}
-  }
-  return moveObj
+    if(player === 'black') {    
+      moveObj.black = {piece, player, from, to}
+    }
+    console.log('moveObj', moveObj);
+    return moveObj
 }
 
 export const castlingAllowed = (board, player, movesHistory, to, check) => {
