@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { acceptPromotion, castlingAllowed, getKingsPosition, getPossibleMoves, initializeBoard, isCheck, isGoingToPromote, isPlayerTurn, processMove, processPromotion, saveMovementHistory } from "../tools"
+import { acceptPromotion, castlingAllowed, getKingsPosition, initializeBoard, isCheck, isGoingToPromote, isPlayerTurn, processMove, processPromotion, saveMovementHistory } from "../tools"
 import { isMovePossible } from "../movements"
 import Board from "./Board"
 import Promotion from "./Promotion"
@@ -30,7 +30,6 @@ const Game = () => {
     const isCheckForPlayer = isCheck(board, turn) 
     const possibleBoard = processMove(board, from, to)
     const evalCheckOnNextMove = isCheck(possibleBoard, turn)
-    //const playerPossibleMoves = getPossibleMoves(board, turn)
     const canPromoteOnNextMove = isGoingToPromote(board, turn)
     const canCastle = castlingAllowed(board, turn, movesHistory, to, check)
     const canMove = isMovePossible(board, from, to)
@@ -39,7 +38,6 @@ const Game = () => {
     const shortBlackRook = [7, 5]
     const longBlackRook = [0, 3]
 
-    console.log('gameObj', movesHistory);
     // TODO If is checkmate without the need of destroying the king notify that the game is over
     if (kingPos.length < 2) {
       setCheckMate(true)
@@ -48,12 +46,10 @@ const Game = () => {
 
     
     if (canPromoteOnNextMove.length && !pendingPromotion) {
-      console.log('PENDING PROMOTION SET TO TRUE');
       setPendingPromotion(true)
     }
     
     if (promotion && promSelectedPiece) {
-      console.log('PROMOTION IS FUCKING YOU UP');
       const selectedPiece = {
         player: turn,
         type: promSelectedPiece
@@ -67,7 +63,7 @@ const Game = () => {
     if (canCastle && !castling) {
       setCastling(true)
       setBoard(processMove(board, from, to))
-      if (turn) setMovesHistory(movesHistory.concat(saveMovementHistory(from, to, turn, pieceInSquare)))
+      setMovesHistory(movesHistory.concat(saveMovementHistory(from, to, turn, pieceInSquare)))
       const [shortWhite, longWhite, shortBlack, longBlack] = [to === 62, to === 58, to === 6, to === 2]
       const rookToCastle = shortWhite ? shortWhiteRook : longWhite ? longWhiteRook : shortBlack ? shortBlackRook : longBlack ? longBlackRook : false
       console.log('rook',rookToCastle);
@@ -84,7 +80,6 @@ const Game = () => {
 
     else if (pendingPromotion && canPromoteOnNextMove.some(p => p.player === turn) &&
     canPromoteOnNextMove.some(p => p.to === to)) {
-      console.log('PENDING PROMOTION IS FUCKING YOU UP')
       setBoard(acceptPromotion(board, turn, from, to))
       if (turn) setMovesHistory(movesHistory.concat(saveMovementHistory(from, to, turn, pieceInSquare)))
       setPendingPromotion(false)
@@ -93,48 +88,37 @@ const Game = () => {
     }
   
     else if (!canMove && to && !castling) {
-      console.log('NOT A VALID MOVE IS FUCKING YOU UP');
       setSelected([])
       return console.log('That\'s not a valid move'); 
     }
     
     else if (isCheckForPlayer && !check) {
-      console.log('ISCHECK IS FUCKING YOU UP');
       setCheck(true)
     }
     else if (!pieceInSquare && from) {
-      console.log('EMPTY SQUARE IS FUCKING YOU UP');
       setSelected([])
       return console.log(('You can\'t play an empty square, please select a piece'));
     }
     
     else if (!isSelectedTurn && pieceInSquare) {
-      console.log('NOT YOUR PIECES IS FUCKING YOU UP');
       setSelected([])
       return console.log('Those are not your pieces!');
     }
 
     else if (canMove && isSelectedTurn && !evalCheckOnNextMove && !checkMate){
-      console.log('MOVE IS FUCKING YOU UP');
       setBoard(processMove(board, from, to))
-      console.log('Set Board');
       if (check) setCheck(false)
       setMovesHistory(movesHistory.concat(saveMovementHistory(from, to, turn, pieceInSquare)))
-      console.log('Set history');
       setSelected([])
-      console.log('set Selected');
       setTurn(turn === 'white' ? 'black' : 'white')
-      console.log('set Turn');
     }
     
     else if (check && to) {
-      console.log('TRY A DIFFERENT MOVE IS FUCKING YOU UP');      
       setSelected([])
       return console.log('That\'s check, try a different move');
     }
     
     else if (evalCheckOnNextMove && to) {
-      console.log('THAT WILL CAUSE CHECK IS FUCKING YOU UP');
       setSelected([])
       return console.log('That will cause check, try another move')
     }
