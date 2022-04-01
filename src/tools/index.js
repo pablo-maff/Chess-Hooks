@@ -202,18 +202,18 @@ export const processPromotion = (board, from, piece) => {
   return newBoard
 }
 
-let moveObj = {}
+let moveNum = 1
 export const saveMovementHistory = (from, to, player, piece) => {
-    if (player === 'white') {
-      moveObj = {...moveObj, white: {piece, player, from, to}}
-      delete moveObj.black
-    }
+  let moveObj = {moveNumber: moveNum}
+  if (player === 'white') {
+    moveObj = {...moveObj, white: {piece, player, from, to}}
+  }
 
-    if(player === 'black') {    
-      moveObj.black = {piece, player, from, to}
-    }
-    console.log('moveObj', moveObj);
-    return moveObj
+  if(player === 'black') {    
+    moveObj = {...moveObj, black: {piece, player, from, to}}
+    moveNum++
+  }
+  return moveObj
 }
 
 export const castlingAllowed = (board, player, movesHistory, to, check) => {
