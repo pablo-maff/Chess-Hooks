@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { acceptPromotion, castlingAllowed, getKingsPosition, getPossibleMoves, initializeBoard, isCheck, isGoingToPromote, isPlayerTurn, processMove, processPromotion, saveMovementHistory } from "../tools"
+import { acceptPromotion, castlingAllowed, enPassant, getKingsPosition, getPossibleMoves, initializeBoard, isCheck, isGoingToPromote, isPlayerTurn, processMove, processPromotion, saveMovementHistory } from "../tools"
 import { isMovePossible } from "../movements"
 import Board from "./Board"
 import Promotion from "./Promotion"
@@ -15,7 +15,7 @@ const Game = () => {
   const [promotion, setPromotion] = useState(false)
   const [promSelectedPiece, setPromSelectedPiece] = useState(false)
   const [castling, setCastling] = useState(false)
-
+  console.log('enPassant', enPassant(board, turn, movesHistory))
   if (checkMate) console.log('GAME OVER!');
 
   const selectPromotedPiece = (e) => {
@@ -39,7 +39,7 @@ const Game = () => {
     const shortBlackRook = [7, 5]
     const longBlackRook = [0, 3]
 
-    console.log('gameObj', movesHistory);
+    //console.log('gameObj', movesHistory);
     // TODO If is checkmate without the need of destroying the king notify that the game is over
     if (kingPos.length < 2) {
       setCheckMate(true)
@@ -117,14 +117,10 @@ const Game = () => {
     else if (canMove && isSelectedTurn && !evalCheckOnNextMove && !checkMate){
       console.log('MOVE IS FUCKING YOU UP');
       setBoard(processMove(board, from, to))
-      console.log('Set Board');
       if (check) setCheck(false)
       setMovesHistory(movesHistory.concat(saveMovementHistory(from, to, turn, pieceInSquare)))
-      console.log('Set history');
       setSelected([])
-      console.log('set Selected');
       setTurn(turn === 'white' ? 'black' : 'white')
-      console.log('set Turn');
     }
     
     else if (check && to) {

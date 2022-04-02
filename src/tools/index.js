@@ -105,7 +105,7 @@ export const isEven = num => num % 2 === 0
 export const processMove = (board, from, to) => {
   const newBoard = [...board]
   const piece = newBoard[from]?.piece
-  
+
   // REMEMBER!!! returns a copy of the object with the specified values changed
   newBoard[from] = {
     ...newBoard[from],
@@ -123,10 +123,10 @@ export const processMove = (board, from, to) => {
 }
 
 export const range = (size, startAt = 0) =>
-[...Array(size).keys()].map(i => i + startAt);
+  [...Array(size).keys()].map(i => i + startAt);
 
-export const getKingsPosition = (board) => 
-board.filter(square => board[square.id].piece.type === 'king')
+export const getKingsPosition = (board) =>
+  board.filter(square => board[square.id].piece.type === 'king')
 
 export const getPossibleMoves = (board, player) => {
   const opponent = player === 'white' ? 'black' : 'white'
@@ -137,7 +137,7 @@ export const getPossibleMoves = (board, player) => {
   // Get enemy pieces position
   const enemyPiecesPos = board.filter(piece =>
     piece.piece.player === opponent).map(piece => piece.id)
-      
+
   // TODO get rid of the for loop and only use reduce
   // Evaluate possible moves of all of player pieces
   let playerPossibleMoves = []
@@ -204,13 +204,13 @@ export const processPromotion = (board, from, piece) => {
 
 let moveNum = 1
 export const saveMovementHistory = (from, to, player, piece) => {
-  let moveObj = {moveNumber: moveNum}
+  let moveObj = { moveNumber: moveNum }
   if (player === 'white') {
-    moveObj = {...moveObj, white: {piece, player, from, to}}
+    moveObj = { ...moveObj, white: { piece, player, from, to } }
   }
 
-  if(player === 'black') {    
-    moveObj = {...moveObj, black: {piece, player, from, to}}
+  if (player === 'black') {
+    moveObj = { ...moveObj, black: { piece, player, from, to } }
     moveNum++
   }
   return moveObj
@@ -248,32 +248,69 @@ export const castlingAllowed = (board, player, movesHistory, to, check) => {
     }
     return true
   }
-  
+
   if (movesHistory.find(piece => piece.piece === 'king' && piece.player === player)) return false
 
   else if (shortWhiteKing === to && !movesHistory.find(move => move.from === shortWhiteRook)
     && checkPath(board, shortWhiteCastlingPath) && !check
     && !opponentPossibleMoves.find(move => move.to === (61 || 62))) {
-      return true
+    return true
   }
 
   else if (longWhiteKing === to && !movesHistory.find(move => move.from === longWhiteRook)
-  && checkPath(board, longWhiteCastlingPath) && !check
-  && !opponentPossibleMoves.find(move => move.to === (57 || 58 || 59))) {
+    && checkPath(board, longWhiteCastlingPath) && !check
+    && !opponentPossibleMoves.find(move => move.to === (57 || 58 || 59))) {
     return true
   }
 
   else if (shortBlackKing === to && !movesHistory.find(move => move.from === shortBlackRook)
-  && checkPath(board, shortBlackCastlingPath) && !check
-  && !opponentPossibleMoves.find(move => move.to === (5 || 6))) {
+    && checkPath(board, shortBlackCastlingPath) && !check
+    && !opponentPossibleMoves.find(move => move.to === (5 || 6))) {
     return true
   }
 
   else if (longBlackKing === to && !movesHistory.find(move => move.from === longBlackRook)
-  && checkPath(board, longBlackCastlingPath) && !check
-  && !opponentPossibleMoves.find(move => move.to === (1 || 2 || 3))) {
+    && checkPath(board, longBlackCastlingPath) && !check
+    && !opponentPossibleMoves.find(move => move.to === (1 || 2 || 3))) {
     return true
   }
+
+  return false
+}
+
+export const enPassant = (board, player, movesHistory) => {
+  // - The capturing pawn must have advanced exactly three ranks to perform this move.
+  //      If white pawn is in range 24 to 31 or black pawn is in range 32 to 39
+  // - The captured pawn must have moved two squares in one move, landing right next to the capturing pawn.
+  //      If white, opponent last move is pawn and from + to = 16. If black, opponent last move is pawn and from - to = 16.
+  //      And player pawn pos - 1 or pos + 1 = opponent pawn
+  // - The en passant capture must be performed on the turn immediately after the pawn being captured moves. If the player does not capture en passant on that turn, they no longer can do it later.
+  const opponent = player === 'white' ? 'black' : 'white'
+  
+  const enPassantPositions = {
+    white: range(8, 24),
+    black: range(8, 32)
+  }
+  
+  const pawnInPos = board.filter(square =>
+    enPassantPositions[player].includes(square.id)
+    && square.piece.type === 'pawn'
+    && square.piece.player === player)
+    .map(pawn => pawn.id)
+  
+    const enemyPawnLastMove = movesHistory.slice(-1)
+  
+  const blackAllowsEnPassant = enemyPawnLastMove.filter(move =>
+    move[opponent].to - move[opponent].from === 16).map(pawn => pawn.black.to)
+  
+    const whiteAllowsEnPassant = enemyPawnLastMove.filter(move =>
+    move[opponent].from - move[opponent].to === 16).map(pawn => pawn.white.to)
+
+
+  const whiteValid = pawnInPos.some(pawn => pawn -1 === blackAllowsEnPassant[0] || pawn +1 === blackAllowsEnPassant[0])
+  const blackValid = pawnInPos.some(pawn => pawn -1 === whiteAllowsEnPassant[0] || pawn +1 === whiteAllowsEnPassant[0])
+
+  if (whiteValid || blackValid) return true
 
   return false
 }
