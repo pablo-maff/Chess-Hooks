@@ -9,10 +9,10 @@ import { isKingMovePossible } from "./king";
 export const isMovePossible = (board, from, to) => {
   if (!board) return null
   
-  const pieceInOrigin = board[from]?.piece.type
-  const pieceInDestination = board[to]?.piece.type
-  const playerInOrigin = board[from]?.piece.player
-  const playerInDestination = board[to]?.piece.player
+  const pieceInOrigin = board[from]?.piece?.type
+  const pieceInDestination = board[to]?.piece?.type
+  const playerInOrigin = board[from]?.piece?.player
+  const playerInDestination = board[to]?.piece?.player
 
 
   if (isEnemyPiece(playerInOrigin, playerInDestination)) {

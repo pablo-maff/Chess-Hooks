@@ -63,7 +63,7 @@ describe('Chess app', function() {
     })
 
     it('white can long castle', function() {
-      cy.move([51, 43, 8, 16, 58, 37, 9, 17, 51, 43, 10, 18, 59, 51, 11, 19, 57, 40, 12, 20, 60, 58])
+      cy.move([51, 43, 8, 16, 58, 37, 9, 17, 59, 51, 10, 18, 57, 40, 11, 19, 60, 58])
         .contains('♔').get('#59').contains('♖')
     })
 
@@ -118,9 +118,18 @@ describe('Chess app', function() {
     })
 
     // TODO add more test cases for all the en passant rules
-    it.only('can destroy an enemy piece using en passant', function() {
-      cy.move([53, 37, 11, 27, 37, 29, 12, 28, 29, 20]).contains('♙')
-      cy.get('#28').contains('♟').should('not.exist')
+    describe('En Passant', function() {
+      it.only('can destroy an enemy piece', function() {
+        cy.move([53, 37, 11, 27, 37, 29, 12, 28, 29, 20]).contains('♙')
+        cy.get('#28').contains('♟').should('not.exist')
+      })
+
+      it('can\'t do it if player\'s pawn has not advanced exactly three ranks', function() {
+        cy.move([53, 37, 12, 28, 54, 38, 28, 36, 37, 28]).contains('♙').should('not.exist')
+          .move([37, 29, 36, 44, 51, 43, 44, 51]).contains('♟').should('not.exist')
+      })
+
+      it('can ')
     })
 
     it('can\'t destroy a friendly piece', function() {
