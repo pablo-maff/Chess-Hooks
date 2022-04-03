@@ -307,10 +307,22 @@ export const enPassant = (board, player, movesHistory) => {
     move[opponent].from - move[opponent].to === 16).map(pawn => pawn.white.to)
 
 
-  const whiteValid = pawnInPos.some(pawn => pawn -1 === blackAllowsEnPassant[0] || pawn +1 === blackAllowsEnPassant[0])
-  const blackValid = pawnInPos.some(pawn => pawn -1 === whiteAllowsEnPassant[0] || pawn +1 === whiteAllowsEnPassant[0])
-
-  if (whiteValid || blackValid) return true
+  const whiteValid = pawnInPos.filter(pawn => pawn -1 === blackAllowsEnPassant[0] || pawn +1 === blackAllowsEnPassant[0])
+  const blackValid = pawnInPos.filter(pawn => pawn -1 === whiteAllowsEnPassant[0] || pawn +1 === whiteAllowsEnPassant[0])
+  if (whiteValid.length) return whiteValid
+  else if (blackValid.length) return blackValid
 
   return false
+}
+
+export const processEnPassant = (board, from) => {
+  const newBoard = [...board]
+  newBoard[from] = {
+    ...newBoard[from],
+    piece: {
+      player: null,
+      type: null
+    }
+  }
+  return newBoard
 }
