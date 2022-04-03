@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { acceptPromotion, castlingAllowed, enPassant, getKingsPosition, getPossibleMoves, initializeBoard, isCheck, isGoingToPromote, isPlayerTurn, processEnPassant, processMove, processPromotion, saveMovementHistory } from "../tools"
 import { isMovePossible } from "../movements"
 import Board from "./Board"
@@ -15,7 +15,7 @@ const Game = () => {
   const [promotion, setPromotion] = useState(false)
   const [promSelectedPiece, setPromSelectedPiece] = useState(false)
   const [castling, setCastling] = useState(false)
-  const [enPassantState, setEnPassantState] = useState(false)
+  const enPassantRef = useRef(false)
   console.log('enPassant', enPassant(board, turn, movesHistory))
   if (checkMate) console.log('GAME OVER!');
 
@@ -43,18 +43,18 @@ const Game = () => {
 
     //console.log('gameObj', movesHistory);
     // TODO If is checkmate without the need of destroying the king notify that the game is over
+    console.log('enPassantRef', enPassantRef);
     if (kingPos.length < 2) {
       setCheckMate(true)
       return console.log('Game is Over');
     }
 
-    
-    if (canPromoteOnNextMove.length && !pendingPromotion) {
+    else if (canPromoteOnNextMove.length && !pendingPromotion) {
       console.log('PENDING PROMOTION SET TO TRUE');
       setPendingPromotion(true)
     }
     
-    if (promotion && promSelectedPiece) {
+    else if (promotion && promSelectedPiece) {
       console.log('PROMOTION IS FUCKING YOU UP');
       const selectedPiece = {
         player: turn,
@@ -66,31 +66,10 @@ const Game = () => {
       setTurn(turn === 'white' ? 'black' : 'white')
     }
 
-    if ((enPassantAllowed.length && enPassantAllowed.includes(from) && board[to - 8]?.piece.type === 'pawn') 
-        || (enPassantAllowed.length && enPassantAllowed?.includes(from) && board[to + 8]?.piece.type === 'pawn')) {
-      console.log('EN PASSSANT ALLOWED!!!!');
-      setEnPassantState(true)
-      setBoard(processMove(board, from, to))
-
-      
-    }
-    else if (enPassantState  && board[to - 8]?.piece.type === 'pawn') {
-      setBoard(processEnPassant(board, to - 8))
-      setEnPassantState(false)
-      if (turn) setMovesHistory(movesHistory.concat(saveMovementHistory(from, to, turn, pieceInSquare)))
-    setTurn(turn === 'white' ? 'black' : 'white')
-
-    }
-    else if (enPassantState && board[to + 8]?.piece.type === 'pawn') {
-      console.log('SECOND ENPASSANT ALLOWED!!!');
-      setEnPassantState(false)
-      setBoard(processEnPassant(board, to + 8))
-       if (turn) setMovesHistory(movesHistory.concat(saveMovementHistory(from, to, turn, pieceInSquare)))
-     setTurn(turn === 'white' ? 'black' : 'white')
-
-    }
     
-    if (canCastle && !castling) {
+
+    
+    else if (canCastle && !castling) {
       setCastling(true)
       setBoard(processMove(board, from, to))
       if (turn) setMovesHistory(movesHistory.concat(saveMovementHistory(from, to, turn, pieceInSquare)))
@@ -116,8 +95,31 @@ const Game = () => {
       setPromotion(true)
       setSelected([to])
     }
+
+    if ((enPassantAllowed.length && enPassantAllowed.includes(from) && board[to - 8]?.piece.type === 'pawn') 
+        || (enPassantAllowed.length && enPassantAllowed?.includes(from) && board[to + 8]?.piece.type === 'pawn')) {
+      console.log('EN PASSSANT ALLOWED!!!!');
+      enPassantRef.current = true
+      console.log('from', from, 'to', to);
+      setBoard(processMove(board, from, to))
+    }
+    else if (!!enPassantRef.current && board[to - 8]?.piece.type === 'pawn') {
+      setBoard(processEnPassant(board, to - 8))
+      enPassantRef.current = false
+      if (turn) setMovesHistory(movesHistory.concat(saveMovementHistory(from, to, turn, pieceInSquare)))
+    setTurn(turn === 'white' ? 'black' : 'white')
+
+    }
+    else if (!!enPassantRef.current && board[to + 8]?.piece.type === 'pawn') {
+      console.log('SECOND ENPASSANT ALLOWED!!!');
+      setBoard(processMove(board, to + 8))
+      enPassantRef.current = false
+       if (turn) setMovesHistory(movesHistory.concat(saveMovementHistory(from, to, turn, pieceInSquare)))
+     setTurn(turn === 'white' ? 'black' : 'white')
+
+    }
   
-    else if (!canMove && to && !castling && !enPassantAllowed.length && !enPassantState) {
+    else if (!canMove && to && !castling && !enPassantAllowed.length && !enPassantRef) {
       console.log('NOT A VALID MOVE IS FUCKING YOU UP');
       setSelected([])
       return console.log('That\'s not a valid move'); 
@@ -127,7 +129,7 @@ const Game = () => {
       console.log('ISCHECK IS FUCKING YOU UP');
       setCheck(true)
     }
-    else if (!pieceInSquare && from) {
+    else if (!pieceInSquare && from && !enPassantRef) {
       console.log('EMPTY SQUARE IS FUCKING YOU UP');
       setSelected([])
       return console.log(('You can\'t play an empty square, please select a piece'));
