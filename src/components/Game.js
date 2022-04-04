@@ -45,10 +45,7 @@ const Game = () => {
     const evalCheckOnNextMove = isCheck(possibleBoard, player, movesHistory)
     const canPromoteOnNextMove = isGoingToPromote(board, player, movesHistory)
     const canCastle = castlingAllowed(board, player, movesHistory, to, check)
-    const shortWhiteRook = [63, 61]
-    const longWhiteRook = [56, 59]
-    const shortBlackRook = [7, 5]
-    const longBlackRook = [0, 3]
+    const [shortWhiteRook, longWhiteRook, shortBlackRook, longBlackRook] = [[63, 61], [56, 59], [7, 5], [0, 3]]
 
     // TODO If is checkmate without the need of destroying the king notify that the game is over
     if (kingPos.length < 2) {
