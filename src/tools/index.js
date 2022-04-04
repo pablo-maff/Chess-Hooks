@@ -217,10 +217,22 @@ export const castlingAllowed = (board, player, movesHistory, to, check) => {
   const opponentPossibleMoves = getPossibleMoves(board, opponent, movesHistory)
   const [shortWhiteKing, longWhiteKing, shortBlackKing, longBlackKing, longWhiteRook,
     shortWhiteRook, longBlackRook, shortBlackRook] = [62, 58, 6, 2, 56, 63, 0, 7]
-
+    
   const [shortWhiteCastlingPath, longWhiteCastlingPath, shortBlackCastlingPath,
     longBlackCastlingPath] = [[61, 62], [57, 58, 59], [5, 6], [1, 2, 3]]
 
+  const selectKing = shortWhiteKing === to ? shortWhiteKing : longWhiteKing === to ? longWhiteKing
+  : shortBlackKing === to ? shortBlackKing : longBlackKing === to ? longBlackKing : null
+
+  const selectRook = shortWhiteKing === to ? shortWhiteRook : longWhiteKing === to ? longWhiteRook
+  : shortBlackKing === to ? shortBlackRook : longBlackKing === to ? longBlackRook : null
+
+  const selectTo = shortWhiteKing === to ? 62 : longWhiteKing === to ? 58
+  : shortBlackKing === to ? 6 : longBlackKing === to ? 2 : null
+
+  const selectedPath = shortWhiteKing === to ? shortWhiteCastlingPath : longWhiteKing === to ? longWhiteCastlingPath
+  : shortBlackKing === to ? shortBlackCastlingPath : longBlackKing === to ? longBlackCastlingPath : null
+    
   // - There must not be any pieces between the king and the rook
   //    Check path squares
   const checkPath = (board, path) => {
@@ -239,27 +251,9 @@ export const castlingAllowed = (board, player, movesHistory, to, check) => {
   // - The square the king goes and its path may not be under atack
   //    Perform atack checking on this squares
   // - If rook is under attack castling is allowed
-  else if (shortWhiteKing === to && !movesHistory.find(move => move.from === shortWhiteRook)
-    && checkPath(board, shortWhiteCastlingPath) && !check
-    && !opponentPossibleMoves.find(move => move.to === (61 || 62))) {
-    return true
-  }
-
-  else if (longWhiteKing === to && !movesHistory.find(move => move.from === longWhiteRook)
-    && checkPath(board, longWhiteCastlingPath) && !check
-    && !opponentPossibleMoves.find(move => move.to === (57 || 58 || 59))) {
-    return true
-  }
-
-  else if (shortBlackKing === to && !movesHistory.find(move => move.from === shortBlackRook)
-    && checkPath(board, shortBlackCastlingPath) && !check
-    && !opponentPossibleMoves.find(move => move.to === (5 || 6))) {
-    return true
-  }
-
-  else if (longBlackKing === to && !movesHistory.find(move => move.from === longBlackRook)
-    && checkPath(board, longBlackCastlingPath) && !check
-    && !opponentPossibleMoves.find(move => move.to === (1 || 2 || 3))) {
+  if (selectKing && !movesHistory.find(move => move.from === selectRook)
+    && checkPath(board, selectedPath) && !check
+    && !opponentPossibleMoves.find(move => move.to === selectTo)) {
     return true
   }
 
@@ -268,21 +262,21 @@ export const castlingAllowed = (board, player, movesHistory, to, check) => {
 
 export const enPassant = (board, player, movesHistory) => {
   const opponent = player === 'white' ? 'black' : 'white'
-  
+
   // - The capturing pawn must have advanced exactly three ranks to perform this move.
   //      If white pawn is in range 24 to 31 or black pawn is in range 32 to 39
   const enPassantPositions = {
     white: range(8, 24),
     black: range(8, 32)
   }
-  
+
   const pawnInPos = board?.filter((square) => enPassantPositions[player].includes(square.id)
-  && square.piece.type === 'pawn' && square.piece.player === player)
-  .map(pawn => pawn.id)
-  
+    && square.piece.type === 'pawn' && square.piece.player === player)
+    .map(pawn => pawn.id)
+
   // - The en passant capture must be performed on the turn immediately after the pawn being captured moves. If the player does not capture en passant on that turn, they no longer can do it later.
   const enemyPawnLastMove = movesHistory?.slice(-1)
-  
+
   // - The captured pawn must have advanced two squares in one move, landing right next to the capturing pawn.
   //      If white, opponent last move is pawn and from + to = 16. If black, opponent last move is pawn and from - to = 16.
   //      And player pawn pos - 1 or pos + 1 = opponent pawn
