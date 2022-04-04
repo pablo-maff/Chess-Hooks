@@ -12,33 +12,33 @@ export const renderPiece = (piece) => {
       <Pawn player={'black'} />
       : <Pawn player={'white'} />
 
-  else if (piece.type === 'rook')
+  if (piece.type === 'rook')
     return piece.player === 'black' ?
       <Rook player={'black'} />
       : <Rook player={'white'} />
 
-  else if (piece.type === 'knight')
+  if (piece.type === 'knight')
     return piece.player === 'black' ?
       <Knight player={'black'} />
       : <Knight player={'white'} />
 
-  else if (piece.type === 'bishop')
+  if (piece.type === 'bishop')
     return piece.player === 'black' ?
       <Bishop player={'black'} />
       : <Bishop player={'white'} />
 
-  else if (piece.type === 'queen')
+  if (piece.type === 'queen')
     return piece.player === 'black' ?
       <Queen player={'black'} />
       : <Queen player={'white'} />
 
-  else if (piece.type === 'king')
+  if (piece.type === 'king')
     return piece.player === 'black' ?
       <King player={'black'} />
       : <King player={'white'} />
 }
 
-export const assignInitialPiece = (position, piece = false) => {
+export const assignInitialPiece = (position) => {
   if ((position >= 8 && position <= 15) || (position >= 48 && position <= 55)) {
     return 'pawn'
   }
@@ -69,7 +69,7 @@ export const assignInitialPiece = (position, piece = false) => {
 const assignInitialPlayer = (position) => {
   if (position <= 15) return 'black'
 
-  else if (position >= 48) return 'white'
+  if (position >= 48) return 'white'
 
   return null
 }
@@ -87,12 +87,10 @@ const defineSquare = (position) => {
 
 export const initializeBoard = () => {
   let squares = []
-
   // TODO Replace this loop with reduce
   for (let i = 0; i <= 63; i++) {
     squares.push(defineSquare(i))
   }
-
   return squares
 }
 
@@ -106,7 +104,6 @@ export const processMove = (board, from, to) => {
   const newBoard = [...board]
   const piece = newBoard[from]?.piece
 
-  // REMEMBER!!! returns a copy of the object with the specified values changed
   newBoard[from] = {
     ...newBoard[from],
     piece: {
@@ -130,19 +127,17 @@ export const getKingsPosition = (board) =>
 
 export const getPossibleMoves = (board, player, movesHistory) => {
   const opponent = player === 'white' ? 'black' : 'white'
-  // Get player pieces position
+
   const playerPiecesPos = board.filter(piece =>
     piece.piece.player === player).map(piece => piece.id)
-  // Get enemy pieces position
+
   const enemyPiecesPos = board.filter(piece =>
     piece.piece.player === opponent).map(piece => piece.id)
 
   // TODO get rid of the for loop and only use reduce
-  // Evaluate possible moves of all of player pieces
   let playerPossibleMoves = []
   for (let to = 0; to < 64; to++) {
     playerPiecesPos.reduce((possibMoves, move) => {
-      // Player is defined here but when is passed to the function call is passed it becomes an empty array!
       if (isMovePossible(board, move, to, movesHistory, player, board[move]?.piece.type)) possibMoves.push({
         type: board[move].piece.type,
         player: board[move].piece.player,
@@ -175,6 +170,7 @@ export const isGoingToPromote = (board, player, movesHistory) => {
     black: range(8, 56)
   }
   const selectPromotionRow = player === 'white' ? promotionRow.white : promotionRow.black
+
   const isGoingToPromote = getPossibleMoves(board, player, movesHistory).filter(pos =>
     selectPromotionRow.includes(pos.to) && pos.type === 'pawn').map(promSquares => (
       {
@@ -217,31 +213,16 @@ export const saveMovementHistory = (from, to, player, piece) => {
 }
 
 export const castlingAllowed = (board, player, movesHistory, to, check) => {
-  // - Neither king or rook has moved
-  //    Get movement history and check if they have not moved
-  // - There must not be any pieces between the king and the rook
-  //    Check path squares
-  // - The king may not be in check
-  //    Perform check checking
-  // - The square the king goes and its path may not be under atack
-  //    Perform atack checking on this squares
-  // - If rook is under attack castling is allowed
   const opponent = player === 'white' ? 'black' : 'white'
   const opponentPossibleMoves = getPossibleMoves(board, opponent, movesHistory)
-  const shortWhiteKing = 62
-  const longWhiteKing = 58
-  const shortBlackKing = 6
-  const longBlackKing = 2
-  const longWhiteRook = 56
-  const shortWhiteRook = 63
-  const longBlackRook = 0
-  const shortBlackRook = 7
+  const [shortWhiteKing, longWhiteKing, shortBlackKing, longBlackKing, longWhiteRook,
+    shortWhiteRook, longBlackRook, shortBlackRook] = [62, 58, 6, 2, 56, 63, 0, 7]
 
-  const shortWhiteCastlingPath = [61, 62]
-  const longWhiteCastlingPath = [57, 58, 59]
-  const shortBlackCastlingPath = [5, 6]
-  const longBlackCastlingPath = [1, 2, 3]
+  const [shortWhiteCastlingPath, longWhiteCastlingPath, shortBlackCastlingPath,
+    longBlackCastlingPath] = [[61, 62], [57, 58, 59], [5, 6], [1, 2, 3]]
 
+  // - There must not be any pieces between the king and the rook
+  //    Check path squares
   const checkPath = (board, path) => {
     for (let square of path) {
       if (board[square].piece.type) return false
@@ -249,8 +230,15 @@ export const castlingAllowed = (board, player, movesHistory, to, check) => {
     return true
   }
 
-  if (movesHistory.find(piece => piece.piece === 'king' && piece.player === player)) return false
+  // - Neither king or rook has moved
+  //    Get movement history and check if they have not moved
+  if (movesHistory.find(move => move.piece === 'king' && move.player === player)) return false
 
+  // - The king may not be in check
+  //    Perform check checking
+  // - The square the king goes and its path may not be under atack
+  //    Perform atack checking on this squares
+  // - If rook is under attack castling is allowed
   else if (shortWhiteKing === to && !movesHistory.find(move => move.from === shortWhiteRook)
     && checkPath(board, shortWhiteCastlingPath) && !check
     && !opponentPossibleMoves.find(move => move.to === (61 || 62))) {
@@ -279,38 +267,35 @@ export const castlingAllowed = (board, player, movesHistory, to, check) => {
 }
 
 export const enPassant = (board, player, movesHistory) => {
+  const opponent = player === 'white' ? 'black' : 'white'
+  
   // - The capturing pawn must have advanced exactly three ranks to perform this move.
   //      If white pawn is in range 24 to 31 or black pawn is in range 32 to 39
-  // - The captured pawn must have moved two squares in one move, landing right next to the capturing pawn.
-  //      If white, opponent last move is pawn and from + to = 16. If black, opponent last move is pawn and from - to = 16.
-  //      And player pawn pos - 1 or pos + 1 = opponent pawn
-  // - The en passant capture must be performed on the turn immediately after the pawn being captured moves. If the player does not capture en passant on that turn, they no longer can do it later.
-  const opponent = player === 'white' ? 'black' : 'white'
-
   const enPassantPositions = {
     white: range(8, 24),
     black: range(8, 32)
   }
-  const pawnInPos = board?.filter((square) => {
-    return enPassantPositions[player].includes(square.id)
-      && square.piece.type === 'pawn'
-      && square.piece.player === player
-  })
-    .map(pawn => pawn.id)
-
-    // CONTINUE HERE!
-    
-    const enemyPawnLastMove = movesHistory?.slice(-1)
+  
+  const pawnInPos = board?.filter((square) => enPassantPositions[player].includes(square.id)
+  && square.piece.type === 'pawn' && square.piece.player === player)
+  .map(pawn => pawn.id)
+  
+  // - The en passant capture must be performed on the turn immediately after the pawn being captured moves. If the player does not capture en passant on that turn, they no longer can do it later.
+  const enemyPawnLastMove = movesHistory?.slice(-1)
+  
+  // - The captured pawn must have advanced two squares in one move, landing right next to the capturing pawn.
+  //      If white, opponent last move is pawn and from + to = 16. If black, opponent last move is pawn and from - to = 16.
+  //      And player pawn pos - 1 or pos + 1 = opponent pawn
   const blackAllowsEnPassant = enemyPawnLastMove?.filter(move =>
     move[opponent]?.to - move[opponent]?.from === 16).map(pawn => pawn.black.to)
 
   const whiteAllowsEnPassant = enemyPawnLastMove?.filter(move =>
     move[opponent]?.from - move[opponent]?.to === 16).map(pawn => pawn.white.to)
 
-
   const whiteValid = pawnInPos?.filter(pawn => pawn - 1 === blackAllowsEnPassant[0] || pawn + 1 === blackAllowsEnPassant[0] || false)
   const blackValid = pawnInPos?.filter(pawn => pawn - 1 === whiteAllowsEnPassant[0] || pawn + 1 === whiteAllowsEnPassant[0] || false)
 
+  // Return the valid move as an array
   if (whiteValid.length) {
     const validMove = whiteValid.concat(blackAllowsEnPassant - 8)
     return validMove
