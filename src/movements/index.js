@@ -5,24 +5,21 @@ import { isRookMovePossible } from "./rook";
 import { isBishopMovePossible } from "./bishop";
 import { isQueenMovePossible } from "./queen";
 import { isKingMovePossible } from "./king";
+import { getOpponent } from "../tools";
 
-export const isMovePossible = (board, from, to) => {
+export const isMovePossible = (board, from, to, movesHistory, player, pieceInOrigin) => {
   if (!board) return null
   
-  const pieceInOrigin = board[from]?.piece?.type
-  const pieceInDestination = board[to]?.piece?.type
-  const playerInOrigin = board[from]?.piece?.player
-  const playerInDestination = board[to]?.piece?.player
+  const opponent = getOpponent(player)
 
-
-  if (isEnemyPiece(playerInOrigin, playerInDestination)) {
+  if (isEnemyPiece(player, opponent)) {
     if (pieceInOrigin === 'pawn') {
       return isPawnMovePossible(
         from, to,
-        playerInOrigin,
-        pieceInDestination,
-        board
-        )
+        player,
+        board,
+        movesHistory,
+      )
     }
 
     else if (pieceInOrigin === 'knight') {

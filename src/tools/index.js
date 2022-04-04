@@ -292,25 +292,35 @@ export const enPassant = (board, player, movesHistory) => {
     black: range(8, 32)
   }
   
-  const pawnInPos = board.filter(square =>
+  const pawnInPos = board?.filter(square =>
     enPassantPositions[player].includes(square.id)
     && square.piece.type === 'pawn'
     && square.piece.player === player)
     .map(pawn => pawn.id)
-  
-    const enemyPawnLastMove = movesHistory.slice(-1)
-  
-  const blackAllowsEnPassant = enemyPawnLastMove.filter(move =>
+    const enemyPawnLastMove = movesHistory?.slice(-1)
+    const blackAllowsEnPassant = enemyPawnLastMove?.filter(move =>
     move[opponent].to - move[opponent].from === 16).map(pawn => pawn.black.to)
   
-    const whiteAllowsEnPassant = enemyPawnLastMove.filter(move =>
+    const whiteAllowsEnPassant = enemyPawnLastMove?.filter(move =>
     move[opponent].from - move[opponent].to === 16).map(pawn => pawn.white.to)
 
 
-  const whiteValid = pawnInPos.filter(pawn => pawn -1 === blackAllowsEnPassant[0] || pawn +1 === blackAllowsEnPassant[0])
-  const blackValid = pawnInPos.filter(pawn => pawn -1 === whiteAllowsEnPassant[0] || pawn +1 === whiteAllowsEnPassant[0])
-  if (whiteValid.length) return whiteValid
-  else if (blackValid.length) return blackValid
+  const whiteValid = pawnInPos?.filter(pawn => pawn -1 === blackAllowsEnPassant[0] || pawn +1 === blackAllowsEnPassant[0] || false)
+  const blackValid = pawnInPos?.filter(pawn => pawn -1 === whiteAllowsEnPassant[0] || pawn +1 === whiteAllowsEnPassant[0] || false)
+
+  //console.log('blackAllows', blackAllowsEnPassant);
+  //console.log('whiteAllows', whiteAllowsEnPassant);
+
+  if (whiteValid.length) {
+    console.log('WHITE');
+    const validMove = whiteValid.concat(blackAllowsEnPassant - 8) 
+    return validMove
+  }
+  else if (blackValid.length) {
+    console.log('BLACK');
+    const validMove = blackValid.concat(whiteAllowsEnPassant ^ 8)
+    return validMove
+  }
 
   return false
 }
@@ -326,3 +336,5 @@ export const processEnPassant = (board, from) => {
   }
   return newBoard
 }
+
+export const getOpponent = player => player === 'white' ? 'black' : 'white'

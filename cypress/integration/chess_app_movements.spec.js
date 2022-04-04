@@ -118,7 +118,7 @@ describe('Chess app', function() {
     })
 
     // TODO add more test cases for all the en passant rules
-    describe('En Passant', function() {
+    describe.only('En Passant', function() {
       it.only('can destroy an enemy piece', function() {
         cy.move([53, 37, 11, 27, 37, 29, 12, 28, 29, 20]).contains('♙')
         cy.get('#28').contains('♟').should('not.exist')
@@ -126,12 +126,16 @@ describe('Chess app', function() {
 
       it('can\'t do it if player\'s pawn has not advanced exactly three ranks', function() {
         cy.move([53, 37, 12, 28, 54, 38, 28, 36, 37, 28]).contains('♙').should('not.exist')
-          .move([37, 29, 36, 44, 51, 43, 44, 51]).contains('♟').should('not.exist')
+        .move([37, 29, 36, 44, 51, 43, 44, 51]).contains('♟').should('not.exist')
       })
 
-      it('can ')
+      it('can only destroy the last pawn that moved next to him', function() {
+        cy.move([53, 37, 11, 27, 37, 29, 12, 28, 49, 33, 14, 30, 29, 20]).contains('♙').should('not.exist')
+        .move([29, 22]).contains('♙')
+        cy.get('#30').contains('♟').should('not.exist')
+      })
     })
-
+      
     it('can\'t destroy a friendly piece', function() {
       cy.move([55, 47, 54, 47])
 
