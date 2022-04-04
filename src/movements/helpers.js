@@ -13,8 +13,12 @@ export const isDestOccupied = (pieceInDestination) => {
   return true
 }
 
-export const isEnemyPiece = (playerInOrigin, playerInDestination) => {
-  if (playerInOrigin !== playerInDestination) return true
+export const isEnemyPiece = (board, from, to) => {
+  if (!to) return false
+  const player = board[from].piece.player
+  const opponent = board[to].piece.player
+  
+  if (player !== opponent) return true
 
   return false
 }

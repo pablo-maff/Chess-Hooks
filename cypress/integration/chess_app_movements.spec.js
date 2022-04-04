@@ -118,8 +118,8 @@ describe('Chess app', function() {
     })
 
     // TODO add more test cases for all the en passant rules
-    describe.only('En Passant', function() {
-      it.only('can destroy an enemy piece', function() {
+    describe('En Passant', function() {
+      it('can destroy an enemy piece', function() {
         cy.move([53, 37, 11, 27, 37, 29, 12, 28, 29, 20]).contains('♙')
         cy.get('#28').contains('♟').should('not.exist')
       })
@@ -230,7 +230,7 @@ describe('Chess app', function() {
     })
 
     it('can\'t destroy friendly pieces', function() {
-      cy.move([62, 53]).contains('♙')
+      cy.move([61, 52]).contains('♙')
     })
   })
 

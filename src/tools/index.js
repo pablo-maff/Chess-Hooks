@@ -128,9 +128,8 @@ export const range = (size, startAt = 0) =>
 export const getKingsPosition = (board) =>
   board.filter(square => board[square.id].piece.type === 'king')
 
-export const getPossibleMoves = (board, player) => {
+export const getPossibleMoves = (board, player, movesHistory) => {
   const opponent = player === 'white' ? 'black' : 'white'
-
   // Get player pieces position
   const playerPiecesPos = board.filter(piece =>
     piece.piece.player === player).map(piece => piece.id)
@@ -143,7 +142,8 @@ export const getPossibleMoves = (board, player) => {
   let playerPossibleMoves = []
   for (let to = 0; to < 64; to++) {
     playerPiecesPos.reduce((possibMoves, move) => {
-      if (isMovePossible(board, move, to)) possibMoves.push({
+      // Player is defined here but when is passed to the function call is passed it becomes an empty array!
+      if (isMovePossible(board, move, to, movesHistory, player, board[move]?.piece.type)) possibMoves.push({
         type: board[move].piece.type,
         player: board[move].piece.player,
         from: move,
@@ -160,22 +160,22 @@ export const getPossibleMoves = (board, player) => {
   return playerPossibleMoves
 }
 
-export const isCheck = (board, player) => {
+export const isCheck = (board, player, movesHistory) => {
   const opponent = player === 'white' ? 'black' : 'white'
-  const canDestroyKing = getPossibleMoves(board, opponent).filter(piece => piece.canDestroy === 'king')
+  const canDestroyKing = getPossibleMoves(board, opponent, movesHistory).filter(piece => piece.canDestroy === 'king')
   if (canDestroyKing.length) return true
   else return false
 }
 
 export const isPlayerTurn = (turn, player) => turn === player ? true : false
 
-export const isGoingToPromote = (board, player) => {
+export const isGoingToPromote = (board, player, movesHistory) => {
   const promotionRow = {
     white: range(8, 0),
     black: range(8, 56)
   }
   const selectPromotionRow = player === 'white' ? promotionRow.white : promotionRow.black
-  const isGoingToPromote = getPossibleMoves(board, player).filter(pos =>
+  const isGoingToPromote = getPossibleMoves(board, player, movesHistory).filter(pos =>
     selectPromotionRow.includes(pos.to) && pos.type === 'pawn').map(promSquares => (
       {
         player: promSquares.player,
@@ -227,7 +227,7 @@ export const castlingAllowed = (board, player, movesHistory, to, check) => {
   //    Perform atack checking on this squares
   // - If rook is under attack castling is allowed
   const opponent = player === 'white' ? 'black' : 'white'
-  const opponentPossibleMoves = getPossibleMoves(board, opponent)
+  const opponentPossibleMoves = getPossibleMoves(board, opponent, movesHistory)
   const shortWhiteKing = 62
   const longWhiteKing = 58
   const shortBlackKing = 6
@@ -286,38 +286,36 @@ export const enPassant = (board, player, movesHistory) => {
   //      And player pawn pos - 1 or pos + 1 = opponent pawn
   // - The en passant capture must be performed on the turn immediately after the pawn being captured moves. If the player does not capture en passant on that turn, they no longer can do it later.
   const opponent = player === 'white' ? 'black' : 'white'
-  
+
   const enPassantPositions = {
     white: range(8, 24),
     black: range(8, 32)
   }
-  
-  const pawnInPos = board?.filter(square =>
-    enPassantPositions[player].includes(square.id)
-    && square.piece.type === 'pawn'
-    && square.piece.player === player)
+  const pawnInPos = board?.filter((square) => {
+    return enPassantPositions[player].includes(square.id)
+      && square.piece.type === 'pawn'
+      && square.piece.player === player
+  })
     .map(pawn => pawn.id)
+
+    // CONTINUE HERE!
+    
     const enemyPawnLastMove = movesHistory?.slice(-1)
-    const blackAllowsEnPassant = enemyPawnLastMove?.filter(move =>
-    move[opponent].to - move[opponent].from === 16).map(pawn => pawn.black.to)
-  
-    const whiteAllowsEnPassant = enemyPawnLastMove?.filter(move =>
-    move[opponent].from - move[opponent].to === 16).map(pawn => pawn.white.to)
+  const blackAllowsEnPassant = enemyPawnLastMove?.filter(move =>
+    move[opponent]?.to - move[opponent]?.from === 16).map(pawn => pawn.black.to)
+
+  const whiteAllowsEnPassant = enemyPawnLastMove?.filter(move =>
+    move[opponent]?.from - move[opponent]?.to === 16).map(pawn => pawn.white.to)
 
 
-  const whiteValid = pawnInPos?.filter(pawn => pawn -1 === blackAllowsEnPassant[0] || pawn +1 === blackAllowsEnPassant[0] || false)
-  const blackValid = pawnInPos?.filter(pawn => pawn -1 === whiteAllowsEnPassant[0] || pawn +1 === whiteAllowsEnPassant[0] || false)
-
-  //console.log('blackAllows', blackAllowsEnPassant);
-  //console.log('whiteAllows', whiteAllowsEnPassant);
+  const whiteValid = pawnInPos?.filter(pawn => pawn - 1 === blackAllowsEnPassant[0] || pawn + 1 === blackAllowsEnPassant[0] || false)
+  const blackValid = pawnInPos?.filter(pawn => pawn - 1 === whiteAllowsEnPassant[0] || pawn + 1 === whiteAllowsEnPassant[0] || false)
 
   if (whiteValid.length) {
-    console.log('WHITE');
-    const validMove = whiteValid.concat(blackAllowsEnPassant - 8) 
+    const validMove = whiteValid.concat(blackAllowsEnPassant - 8)
     return validMove
   }
   else if (blackValid.length) {
-    console.log('BLACK');
     const validMove = blackValid.concat(whiteAllowsEnPassant ^ 8)
     return validMove
   }
@@ -338,3 +336,22 @@ export const processEnPassant = (board, from) => {
 }
 
 export const getOpponent = player => player === 'white' ? 'black' : 'white'
+
+export const isEnPassant = (board, piece, player, from, to) => {
+  const dest = board[to]?.piece.type === null
+  const validMove = Math.abs(from - to)
+  const blackEnemyPawnDestroyed = board[to + 8]?.piece.type === null
+  const whiteEnemyPawnDestroyed = board[to - 8]?.piece.type === null
+
+  // Need to return false to prevent infite loop after executing the first move of 
+  // en passant which is destroying the enemy pawn. Now we can execute the second 
+  // part which is moving the player's pawn to its corresponding position
+  if (player === 'white' && blackEnemyPawnDestroyed) return false
+
+  if (player === 'black' && whiteEnemyPawnDestroyed) return false
+
+  if (piece === 'pawn' && dest && (validMove === 9 || validMove === 7)) {
+    return true
+  }
+  return false
+}

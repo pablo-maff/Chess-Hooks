@@ -17,10 +17,7 @@ export const isPawnMovePossible = (
 
   const whiteInitialPath = [from - 8]
   const blackInitialPath = [from + 8]
-
   const enPassantAllowed = enPassant(board, player, movesHistory)
-
-
 
   if (enPassantAllowed.length && from === enPassantAllowed[0] && to === enPassantAllowed[1]) {
     return true
