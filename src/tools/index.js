@@ -43,23 +43,23 @@ export const assignInitialPiece = (position) => {
     return 'pawn'
   }
 
-  else if (position === 0 || position === 7 || position === 56 || position === 63) {
+  if (position === 0 || position === 7 || position === 56 || position === 63) {
     return 'rook'
   }
 
-  else if (position === 1 || position === 6 || position === 57 || position === 62) {
+  if (position === 1 || position === 6 || position === 57 || position === 62) {
     return 'knight'
   }
 
-  else if (position === 2 || position === 5 || position === 58 || position === 61) {
+  if (position === 2 || position === 5 || position === 58 || position === 61) {
     return 'bishop'
   }
 
-  else if (position === 4 || position === 60) {
+  if (position === 4 || position === 60) {
     return 'king'
   }
 
-  else if (position === 3 || position === 59) {
+  if (position === 3 || position === 59) {
     return 'queen'
   }
 
@@ -280,24 +280,39 @@ export const enPassant = (board, player, movesHistory) => {
   // - The captured pawn must have advanced two squares in one move, landing right next to the capturing pawn.
   //      If white, opponent last move is pawn and from + to = 16. If black, opponent last move is pawn and from - to = 16.
   //      And player pawn pos - 1 or pos + 1 = opponent pawn
-  const blackAllowsEnPassant = enemyPawnLastMove?.filter(move =>
-    move[opponent]?.to - move[opponent]?.from === 16).map(pawn => pawn.black.to)
 
-  const whiteAllowsEnPassant = enemyPawnLastMove?.filter(move =>
-    move[opponent]?.from - move[opponent]?.to === 16).map(pawn => pawn.white.to)
+  const lastMoveAllowsEnPassant = enemyPawnLastMove?.filter(move =>
+    Math.abs(move[opponent]?.to - move[opponent]?.from) === 16).map(pawn => pawn[opponent].to)
 
-  const whiteValid = pawnInPos?.filter(pawn => pawn - 1 === blackAllowsEnPassant[0] || pawn + 1 === blackAllowsEnPassant[0] || false)
-  const blackValid = pawnInPos?.filter(pawn => pawn - 1 === whiteAllowsEnPassant[0] || pawn + 1 === whiteAllowsEnPassant[0] || false)
+
+  // const blackAllowsEnPassant = enemyPawnLastMove?.filter(move =>
+  //   move[opponent]?.to - move[opponent]?.from === 16).map(pawn => pawn.black.to)
+
+  // const whiteAllowsEnPassant = enemyPawnLastMove?.filter(move =>
+  //   move[opponent]?.from - move[opponent]?.to === 16).map(pawn => pawn.white.to)
+
+  const validEnPassant = pawnInPos?.filter(pawn => pawn - 1 === lastMoveAllowsEnPassant[0] || pawn + 1 === lastMoveAllowsEnPassant[0] || false)
+
+
+  // const whiteValid = pawnInPos?.filter(pawn => pawn - 1 === blackAllowsEnPassant[0] || pawn + 1 === blackAllowsEnPassant[0] || false)
+  // const blackValid = pawnInPos?.filter(pawn => pawn - 1 === whiteAllowsEnPassant[0] || pawn + 1 === whiteAllowsEnPassant[0] || false)
+
+  const selectTo = player === 'white' ? lastMoveAllowsEnPassant - 8 : lastMoveAllowsEnPassant ^ 8
 
   // Return the valid move as an array
-  if (whiteValid.length) {
-    const validMove = whiteValid.concat(blackAllowsEnPassant - 8)
+  if (validEnPassant.length) {
+    const validMove = validEnPassant.concat(selectTo)
     return validMove
   }
-  else if (blackValid.length) {
-    const validMove = blackValid.concat(whiteAllowsEnPassant ^ 8)
-    return validMove
-  }
+  
+  // if (whiteValid.length) {
+  //   const validMove = whiteValid.concat(blackAllowsEnPassant - 8)
+  //   return validMove
+  // }
+  // else if (blackValid.length) {
+  //   const validMove = blackValid.concat(whiteAllowsEnPassant ^ 8)
+  //   return validMove
+  // }
 
   return false
 }
