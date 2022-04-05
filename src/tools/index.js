@@ -126,7 +126,7 @@ export const getKingsPosition = (board) =>
   board.filter(square => board[square.id].piece.type === 'king')
 
 export const getPossibleMoves = (board, player, movesHistory) => {
-  const opponent = player === 'white' ? 'black' : 'white'
+  const opponent = getOpponent(player)
 
   const playerPiecesPos = board.filter(piece =>
     piece.piece.player === player).map(piece => piece.id)
@@ -156,7 +156,7 @@ export const getPossibleMoves = (board, player, movesHistory) => {
 }
 
 export const isCheck = (board, player, movesHistory) => {
-  const opponent = player === 'white' ? 'black' : 'white'
+  const opponent = getOpponent(player)
   const canDestroyKing = getPossibleMoves(board, opponent, movesHistory).filter(piece => piece.canDestroy === 'king')
   if (canDestroyKing.length) return true
   else return false
@@ -213,7 +213,7 @@ export const saveMovementHistory = (from, to, player, piece) => {
 }
 
 export const castlingAllowed = (board, player, movesHistory, to, check) => {
-  const opponent = player === 'white' ? 'black' : 'white'
+  const opponent = getOpponent(player)
   const opponentPossibleMoves = getPossibleMoves(board, opponent, movesHistory)
   const [shortWhiteKing, longWhiteKing, shortBlackKing, longBlackKing, longWhiteRook,
     shortWhiteRook, longBlackRook, shortBlackRook] = [62, 58, 6, 2, 56, 63, 0, 7]
@@ -261,8 +261,7 @@ export const castlingAllowed = (board, player, movesHistory, to, check) => {
 }
 
 export const enPassant = (board, player, movesHistory) => {
-  const opponent = player === 'white' ? 'black' : 'white'
-
+  const opponent = getOpponent(player)
   // - The capturing pawn must have advanced exactly three ranks to perform this move.
   //      If white pawn is in range 24 to 31 or black pawn is in range 32 to 39
   const enPassantPositions = {
@@ -312,10 +311,13 @@ export const processEnPassant = (board, from) => {
 export const getOpponent = player => player === 'white' ? 'black' : 'white'
 
 export const isEnPassant = (board, piece, player, from, to) => {
-  const dest = board[to]?.piece.type === null
-  const validMove = Math.abs(from - to)
+  // If is en passant, player's pawn destination will be empty
+  const destinationIsEmpty = board[to]?.piece.type === null
+  // The move is valid if moves one square forward to its diagonal left or diagonal right
+  const validMove = Math.abs(from - to) === 7 || Math.abs(from - to) === 9
+  // Select position of destroyed pawn
   const selectDestroyedEnemyPawn = player === 'white' ? to ^ 8 : to - 8
-  
+  // Check that enemy pawn has been destroyed
   const enemyPawnDestroyed = board[selectDestroyedEnemyPawn]?.piece.type === null
 
   // Need to return false to prevent infite loop after executing the first move of 
@@ -323,7 +325,8 @@ export const isEnPassant = (board, piece, player, from, to) => {
   // part which is moving the player's pawn to its corresponding position
   if (enemyPawnDestroyed) return false
 
-  if (piece === 'pawn' && dest && (validMove === 9 || validMove === 7)) {
+  // If all the conditions are true, first move of en passant can been performed, removing opponet's pawn from the board
+  if (piece === 'pawn' && destinationIsEmpty && validMove) {
     return true
   }
   return false
