@@ -284,18 +284,7 @@ export const enPassant = (board, player, movesHistory) => {
   const lastMoveAllowsEnPassant = enemyPawnLastMove?.filter(move =>
     Math.abs(move[opponent]?.to - move[opponent]?.from) === 16).map(pawn => pawn[opponent].to)
 
-
-  // const blackAllowsEnPassant = enemyPawnLastMove?.filter(move =>
-  //   move[opponent]?.to - move[opponent]?.from === 16).map(pawn => pawn.black.to)
-
-  // const whiteAllowsEnPassant = enemyPawnLastMove?.filter(move =>
-  //   move[opponent]?.from - move[opponent]?.to === 16).map(pawn => pawn.white.to)
-
   const validEnPassant = pawnInPos?.filter(pawn => pawn - 1 === lastMoveAllowsEnPassant[0] || pawn + 1 === lastMoveAllowsEnPassant[0] || false)
-
-
-  // const whiteValid = pawnInPos?.filter(pawn => pawn - 1 === blackAllowsEnPassant[0] || pawn + 1 === blackAllowsEnPassant[0] || false)
-  // const blackValid = pawnInPos?.filter(pawn => pawn - 1 === whiteAllowsEnPassant[0] || pawn + 1 === whiteAllowsEnPassant[0] || false)
 
   const selectTo = player === 'white' ? lastMoveAllowsEnPassant - 8 : lastMoveAllowsEnPassant ^ 8
 
@@ -304,15 +293,6 @@ export const enPassant = (board, player, movesHistory) => {
     const validMove = validEnPassant.concat(selectTo)
     return validMove
   }
-  
-  // if (whiteValid.length) {
-  //   const validMove = whiteValid.concat(blackAllowsEnPassant - 8)
-  //   return validMove
-  // }
-  // else if (blackValid.length) {
-  //   const validMove = blackValid.concat(whiteAllowsEnPassant ^ 8)
-  //   return validMove
-  // }
 
   return false
 }
