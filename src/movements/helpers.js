@@ -3,8 +3,6 @@ import columnDictionary from '../dictionaries/column.json'
 import diagonalDictionaryTLBR from '../dictionaries/diagonalTopLeftBottomRight.json'
 import diagonalDictionaryTRBL from '../dictionaries/diagonalTopRightBottomLeft.json'
 
-// TODO create a getPath function to not repeat code in every piece movement rules and to use it for checkmate notification
-
 export const isDestOccupied = (pieceInDestination) => {
   if (pieceInDestination === null) {
     return false
@@ -16,7 +14,7 @@ export const isEnemyPiece = (board, from, to) => {
   if (!to) return false
   const player = board[from].piece.player
   const opponent = board[to].piece.player
-  
+
   if (player !== opponent) return true
 
   return false
@@ -33,7 +31,7 @@ export const isSameRow = (from, to) => {
 }
 
 export const isSameColumn = (from, to) => {
-  return !!(columnDictionary[from] && columnDictionary[from][to]);
+  return !!(columnDictionary[from] && columnDictionary[from][to])
 }
 
 export const isSameDiagonal = (from, to) => {

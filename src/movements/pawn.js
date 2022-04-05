@@ -1,12 +1,12 @@
-import { enPassant, range } from "../tools";
-import { isDestOccupied, isPathClean } from "./helpers";
+import { enPassant, range } from '../tools'
+import { isDestOccupied, isPathClean } from './helpers'
 
 export const isPawnMovePossible = (
   from, to,
   player,
   board, movesHistory) => {
 
-  const pieceInDestination = board[to]?.piece?.type
+  const pieceInDestination = to && board[to].piece ? board[to].piece.type : null
 
   const initialPawnPositions = {
     white: range(8, 48),
@@ -21,11 +21,11 @@ export const isPawnMovePossible = (
     return true
   }
 
-  if (((validMove === 8) && !isDestOccupied(pieceInDestination)) || 
+  if (((validMove === 8) && !isDestOccupied(pieceInDestination)) ||
     ((validMove === 16 && initialPawnPositions[player].includes(from))
     && isPathClean(board, initialPath) && !isDestOccupied(pieceInDestination))) {
     return true
-    }
+  }
 
   if ((validMove === 7 || validMove === 9) && isDestOccupied(pieceInDestination)) {
     return true

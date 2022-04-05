@@ -1,18 +1,18 @@
-import { isSameRow, isSameColumn, isPathClean } from "./helpers"
+import { isSameRow, isSameColumn, isPathClean } from './helpers'
 
 // BUG Rook in square 0 can't move unless is destroying another piece
 export const isRookMovePossible = (from, to, board) => {
   const getPath = () => {
     const path = []
     let pathStart, pathEnd, incrementBy
-    
+
     if (from > to) {
       pathStart = to
       pathEnd = from
     }
     else {
       pathStart = from
-      pathEnd = to 
+      pathEnd = to
     }
 
     if (Math.abs(to - from) % 8 === 0) {
@@ -23,7 +23,7 @@ export const isRookMovePossible = (from, to, board) => {
       incrementBy = 1
       pathStart += 1
     }
-    
+
     for (let i = pathStart; i < pathEnd; i += incrementBy) {
       path.push(i)
     }

@@ -1,4 +1,4 @@
-import { setPieceColor } from "../../tools"
+import { setPieceColor } from '../../tools'
 
 const Queen = ({ player }) => {
   const whiteQueen = '♕'

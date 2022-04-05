@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from 'react'
 import { acceptPromotion,
   castlingAllowed,
   getKingsPosition,
@@ -10,10 +10,22 @@ import { acceptPromotion,
   processEnPassant,
   processMove,
   processPromotion,
-  saveMovementHistory } from "../tools"
-import { isMovePossible } from "../movements"
-import Board from "./Board"
-import Promotion from "./Promotion"
+  saveMovementHistory } from '../tools'
+import { isMovePossible } from '../movements'
+import Board from './Board'
+import Promotion from './Promotion'
+
+// TODO: Move promotion to pawn movements and castling to king movements to simplify the logic here
+// TODO: Implement notifications
+// TODO: Implement visualization of moves history and map the square id's to real chess square names
+// TODO: Fix moves history to work properly with en passant
+// TODO: Work on the CSS
+// TODO: Implement more tests
+// TODO: Change lodash chunk to flexbox on Board component
+// TODO: Create a getPath function in movement helpers to not repeat code in every piece movement rules and to use it for checkmate notification
+// TODO: Change for loops to use functions when possible
+// TODO: Define @params for all functions
+// TODO: Write more comments
 
 const Game = () => {
   const [board, setBoard] = useState(initializeBoard())
@@ -27,17 +39,19 @@ const Game = () => {
   const [promSelectedPiece, setPromSelectedPiece] = useState(false)
   const [castling, setCastling] = useState(false)
 
-  if (checkMate) console.log('GAME OVER!');
+  if (checkMate) console.log('GAME OVER!')
 
   const selectPromotedPiece = (e) => {
-    setPromSelectedPiece(e.target.value) 
+    setPromSelectedPiece(e.target.value)
   }
-  
+
+
   useEffect(() => {
     const [from, to] = selected
+    const selectedPlayer = from ? board[from].piece.player : null
     const kingPos = getKingsPosition(board)
-    const isSelectedTurn = isPlayerTurn(player, board[from]?.piece.player)
-    const pieceInSquare = board[from]?.piece.type
+    const isSelectedTurn = isPlayerTurn(player, selectedPlayer)
+    const pieceInSquare = from ? board[from].piece.type : null
     const isCheckForPlayer = isCheck(board, player, movesHistory)
     const isEnPassantForPlayer = isEnPassant(board, pieceInSquare, player, from, to)
     const canMove = isMovePossible(board, from, to, movesHistory, player, pieceInSquare)
@@ -50,13 +64,13 @@ const Game = () => {
     // TODO If is checkmate without the need of destroying the king notify that the game is over
     if (kingPos.length < 2) {
       setCheckMate(true)
-      return console.log('Game is Over');
+      return console.log('Game is Over')
     }
-    
+
     if (canPromoteOnNextMove.length && !pendingPromotion) {
       setPendingPromotion(true)
     }
-    
+
     if (promotion && promSelectedPiece) {
       const selectedPiece = {
         player: player,
@@ -98,7 +112,7 @@ const Game = () => {
     else if (!canMove && to && !castling) {
       //console.log('NOT A VALID MOVE IS FUCKING YOU UP');
       setSelected([])
-      return console.log('That\'s not a valid move'); 
+      return console.log('That\'s not a valid move')
     }
 
     else if (isCheckForPlayer && !check) {
@@ -108,18 +122,18 @@ const Game = () => {
     else if (!pieceInSquare && from) {
       //console.log('EMPTY SQUARE IS FUCKING YOU UP');
       setSelected([])
-      return console.log(('You can\'t play an empty square, please select a piece'));
+      return console.log(('You can\'t play an empty square, please select a piece'))
     }
-    
+
     else if (!isSelectedTurn && pieceInSquare) {
       //console.log('NOT YOUR PIECES IS FUCKING YOU UP');
       setSelected([])
-      return console.log('Those are not your pieces!');
+      return console.log('Those are not your pieces!')
     }
 
     else if (isEnPassantForPlayer) {
       player === 'white' ? setBoard(processEnPassant(board, to + 8))
-      : setBoard(processEnPassant(board, to - 8))
+        : setBoard(processEnPassant(board, to - 8))
     }
 
     else if (canMove && isSelectedTurn && !evalCheckOnNextMove && !checkMate){
@@ -130,13 +144,13 @@ const Game = () => {
       setSelected([])
       setPlayer(player === 'white' ? 'black' : 'white')
     }
-    
+
     else if (check && to) {
-      //console.log('TRY A DIFFERENT MOVE IS FUCKING YOU UP');      
+      //console.log('TRY A DIFFERENT MOVE IS FUCKING YOU UP');
       setSelected([])
-      return console.log('That\'s check, try a different move');
+      return console.log('That\'s check, try a different move')
     }
-    
+
     else if (evalCheckOnNextMove && to) {
       //console.log('THAT WILL CAUSE CHECK IS FUCKING YOU UP');
       setSelected([])

@@ -87,7 +87,6 @@ const defineSquare = (position) => {
 
 export const initializeBoard = () => {
   let squares = []
-  // TODO Replace this loop with reduce
   for (let i = 0; i <= 63; i++) {
     squares.push(defineSquare(i))
   }
@@ -134,7 +133,6 @@ export const getPossibleMoves = (board, player, movesHistory) => {
   const enemyPiecesPos = board.filter(piece =>
     piece.piece.player === opponent).map(piece => piece.id)
 
-  // TODO get rid of the for loop and only use reduce
   let playerPossibleMoves = []
   for (let to = 0; to < 64; to++) {
     playerPiecesPos.reduce((possibMoves, move) => {

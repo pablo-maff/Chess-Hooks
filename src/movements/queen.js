@@ -1,4 +1,4 @@
-import { isPathClean, isSameColumn, isSameDiagonal, isSameRow } from "./helpers"
+import { isPathClean, isSameColumn, isSameDiagonal, isSameRow } from './helpers'
 
 export const isQueenMovePossible = (from, to, board) => {
   const getPath = () => {
