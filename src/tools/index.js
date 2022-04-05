@@ -314,15 +314,14 @@ export const getOpponent = player => player === 'white' ? 'black' : 'white'
 export const isEnPassant = (board, piece, player, from, to) => {
   const dest = board[to]?.piece.type === null
   const validMove = Math.abs(from - to)
-  const blackEnemyPawnDestroyed = board[to + 8]?.piece.type === null
-  const whiteEnemyPawnDestroyed = board[to - 8]?.piece.type === null
+  const selectDestroyedEnemyPawn = player === 'white' ? to ^ 8 : to - 8
+  
+  const enemyPawnDestroyed = board[selectDestroyedEnemyPawn]?.piece.type === null
 
   // Need to return false to prevent infite loop after executing the first move of 
-  // en passant which is destroying the enemy pawn. Now we can execute the second 
+  // en passant, which is destroying the enemy pawn. Now we can execute the second 
   // part which is moving the player's pawn to its corresponding position
-  if (player === 'white' && blackEnemyPawnDestroyed) return false
-
-  if (player === 'black' && whiteEnemyPawnDestroyed) return false
+  if (enemyPawnDestroyed) return false
 
   if (piece === 'pawn' && dest && (validMove === 9 || validMove === 7)) {
     return true
