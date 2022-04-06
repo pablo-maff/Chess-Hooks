@@ -320,14 +320,15 @@ export const processEnPassant = (board, from) => {
 export const getOpponent = player => player === 'white' ? 'black' : 'white'
 
 export const isEnPassant = (board, piece, player, from, to) => {
+  if (!to || piece !== 'pawn') return null
   // If is en passant, player's pawn destination will be empty
-  const destinationIsEmpty = board[to]?.piece.type === null
+  const destinationIsEmpty = board[to].piece.type === null
   // The move is valid if moves one square forward to its diagonal left or diagonal right
   const validMove = Math.abs(from - to) === 7 || Math.abs(from - to) === 9
   // Select position of destroyed pawn
   const selectDestroyedEnemyPawn = player === 'white' ? to ^ 8 : to - 8
   // Check that enemy pawn has been destroyed
-  const enemyPawnDestroyed = board[selectDestroyedEnemyPawn]?.piece.type === null
+  const enemyPawnDestroyed = board[selectDestroyedEnemyPawn].piece.type === null
 
   // Need to return false to prevent infite loop after executing the first move of
   // en passant, which is destroying the enemy pawn. Now we can execute the second
