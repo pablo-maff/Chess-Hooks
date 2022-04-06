@@ -1,7 +1,7 @@
-import Queen from "./pieces/Queen"
-import Rook from "./pieces/Rook"
-import Knight from "./pieces/Knight"
-import Bishop from "./pieces/Bishop"
+import Queen from './pieces/Queen'
+import Rook from './pieces/Rook'
+import Knight from './pieces/Knight'
+import Bishop from './pieces/Bishop'
 
 
 const Promotion = ({ player, selectPiece }) => {

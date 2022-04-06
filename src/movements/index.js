@@ -1,28 +1,22 @@
-import { isPawnMovePossible } from "./pawn";
-import { isKnightMovePossible } from "./knight";
-import { isEnemyPiece } from "./helpers";
-import { isRookMovePossible } from "./rook";
-import { isBishopMovePossible } from "./bishop";
-import { isQueenMovePossible } from "./queen";
-import { isKingMovePossible } from "./king";
+import { isPawnMovePossible } from './pawn'
+import { isKnightMovePossible } from './knight'
+import { isEnemyPiece } from './helpers'
+import { isRookMovePossible } from './rook'
+import { isBishopMovePossible } from './bishop'
+import { isQueenMovePossible } from './queen'
+import { isKingMovePossible } from './king'
 
-export const isMovePossible = (board, from, to) => {
-  if (!board) return null
-  
-  const pieceInOrigin = board[from]?.piece.type
-  const pieceInDestination = board[to]?.piece.type
-  const playerInOrigin = board[from]?.piece.player
-  const playerInDestination = board[to]?.piece.player
+export const isMovePossible = (board, from, to, movesHistory, player, pieceInOrigin) => {
+  if (!board || !pieceInOrigin) return null
 
-
-  if (isEnemyPiece(playerInOrigin, playerInDestination)) {
+  if (isEnemyPiece(board, from, to)) {
     if (pieceInOrigin === 'pawn') {
       return isPawnMovePossible(
         from, to,
-        playerInOrigin,
-        pieceInDestination,
-        board
-        )
+        player,
+        board,
+        movesHistory,
+      )
     }
 
     else if (pieceInOrigin === 'knight') {

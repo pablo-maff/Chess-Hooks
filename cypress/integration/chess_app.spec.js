@@ -2,10 +2,14 @@ describe('Chess app', function() {
   beforeEach(function() {
     cy.visit('http://localhost:3000')
   })
-  
+
   it('game can be opened and pieces are rendered', function() {
     cy.contains('Chess Game')
     cy.contains('♔')
+  })
+
+  it('can move from square 0', function() {
+    cy.move([48, 40, 8, 24, 49, 33, 0, 16]).contains('♜')
   })
 
   describe('Turn', function() {
@@ -29,7 +33,7 @@ describe('Chess app', function() {
 
     it('pieces can\'t move after checkmate', function() {
       cy.move([53, 45, 12, 20, 54, 38, 3, 39, 55, 47])
-      .contains('♙').should('not.exist')
+        .contains('♙').should('not.exist')
     })
   })
 
@@ -53,6 +57,34 @@ describe('Chess app', function() {
     it('only pawns can promote', function() {
       cy.move([52, 36, 13, 29, 61, 34, 15, 23, 34, 6])
       cy.get('#prom-queen').should('not.exist')
+    })
+  })
+
+  describe('Castling', function() {
+    it('white can short castle', function() {
+      cy.move([52, 44, 11, 19, 61, 34, 10, 18, 62, 47, 9, 17, 60, 62])
+        .contains('♔').get('#61').contains('♖')
+    })
+
+    it('white can long castle', function() {
+      cy.move([51, 43, 8, 16, 58, 37, 9, 17, 59, 51, 10, 18, 57, 40, 11, 19, 60, 58])
+        .contains('♔').get('#59').contains('♖')
+    })
+
+    it('black can short castle', function() {
+      cy.move([55, 47, 12, 20, 54, 46, 5, 19, 53, 45, 6, 23, 52, 44, 4, 6])
+        .contains('♚').get('#5').contains('♜')
+    })
+
+    it('black can long castle', function() {
+      cy.move([55, 47, 11, 27, 48, 40, 2, 29, 49, 41, 3, 19, 50, 42, 1, 16, 51, 35, 4, 2])
+        .contains('♚').get('#3').contains('♜')
+    })
+
+    it('both players can castle', function() {
+      cy.move([52, 44, 12, 28, 61, 34, 5, 26, 62, 47, 6, 23, 60, 62])
+        .contains('♔').get('#61').contains('♖').move([4, 6])
+        .contains('♚').get('#5').contains('♜')
     })
   })
 
@@ -89,23 +121,37 @@ describe('Chess app', function() {
       cy.move([55, 39, 15, 31, 39, 31]).contains('♟')
     })
 
-    // TODO add more test cases for all the en passant rules
-    it('can destroy an enemy piece using en passant', function() {
-      cy.move([53, 37, 11, 27, 37, 29, 12, 28, 29, 20]).contains('♙')
-      cy.get('#28').contains('♙').should('not.exist')
+    describe('En Passant', function() {
+      it('can destroy an enemy piece', function() {
+        cy.move([53, 37, 11, 27, 37, 29, 12, 28, 29, 20]).contains('♙')
+        cy.get('#28').contains('♟').should('not.exist')
+      })
+
+      it('can\'t do it if player\'s pawn has not advanced exactly three ranks', function() {
+        cy.move([53, 37, 12, 28, 54, 38, 28, 36, 37, 28]).contains('♙').should('not.exist')
+          .move([37, 29, 36, 44, 51, 43, 44, 51]).contains('♟').should('not.exist')
+      })
+
+      it('can only destroy the last pawn that moved next to him', function() {
+        cy.move([53, 37, 11, 27, 37, 29, 12, 28, 49, 33, 14, 30, 29, 20]).contains('♙').should('not.exist')
+          .move([29, 22]).contains('♙')
+        cy.get('#30').contains('♟').should('not.exist')
+      })
     })
 
     it('can\'t destroy a friendly piece', function() {
       cy.move([55, 47, 54, 47])
-
       cy.get('#54').contains('♙')
       cy.get('#47').contains('♙')
     })
 
     it('can\'t jump over other pieces', function() {
       cy.move([51, 35, 15, 23, 35, 27, 8, 16, 27, 19, 11, 27])
-
       cy.get('#11').contains('♟')
+    })
+
+    it('can\'t destroy pieces jumpint to the other side of the board', function() {
+      cy.move([55, 39, 8, 24, 53, 45, 24, 32, 39, 32]).contains('♙').should('not.exist')
     })
   })
 
@@ -116,7 +162,7 @@ describe('Chess app', function() {
       cy.move([10, 26, 16, 40]).contains('♖')
       cy.move([8, 16, 40, 47]).contains('♖')
     })
-    
+
     it('can\'t move in diagonal', function() {
       cy.move([54, 46, 13, 21, 63, 27]).contains('♖').should('not.exist')
     })
@@ -189,16 +235,16 @@ describe('Chess app', function() {
     })
 
     it('can\'t destroy friendly pieces', function() {
-      cy.move([62, 53]).contains('♙')
+      cy.move([61, 52]).contains('♙')
     })
   })
 
   describe('Queen', function() {
     it('can move in any direction', function() {
       cy.move([52, 44, 8, 16, 59, 45, 9, 17, 45, 27, 16, 24, 27, 29, 15, 23, 29, 25, 14, 22, 25, 33, 13, 21, 33, 40])
-      .contains('♕')
+        .contains('♕')
     })
-    
+
     it('can\'t jump over other pieces', function() {
       cy.move([59, 43]).contains('♕').should('not.exist')
     })
@@ -215,7 +261,7 @@ describe('Chess app', function() {
   describe('King', function() {
     it('can move in any direction', function() {
       cy.move([52, 44, 12, 20, 60, 52, 15, 23, 52, 45, 8, 16, 45, 36, 9, 17, 36, 37, 10, 18, 37, 36, 11, 19, 36, 43, 13, 21, 43, 52])
-      .contains('♔')
+        .contains('♔')
     })
 
     it('can\'t move more than one square per turn', function() {
@@ -226,7 +272,7 @@ describe('Chess app', function() {
 
     it('can destroy enemy pieces', function() {
       cy.move([52, 36, 13, 29, 48, 40, 29, 36, 60, 52, 36, 44, 52, 44])
-      .contains('♔')
+        .contains('♔')
     })
 
     it('can\'t destroy friendly pieces', function() {

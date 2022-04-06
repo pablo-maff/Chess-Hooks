@@ -1,4 +1,4 @@
-import { isPathClean, isSameDiagonal } from "./helpers"
+import { isPathClean, isSameDiagonal } from './helpers'
 
 export const isBishopMovePossible = (from, to, board) => {
   const getPath = () => {

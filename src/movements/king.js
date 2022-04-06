@@ -1,7 +1,7 @@
-import { isSameDiagonal, isSameRow } from "./helpers"
+import { isSameDiagonal, isSameRow } from './helpers'
 
 export const isKingMovePossible = (from, to) => {
-  const possibleMoves = 
+  const possibleMoves =
     (from - 9 === to && isSameDiagonal(from, to)) ||
     from - 8 === to ||
     (from - 7 === to && isSameDiagonal(from, to)) ||
@@ -10,6 +10,6 @@ export const isKingMovePossible = (from, to) => {
     from + 8 === to ||
     (from + 7 === to && isSameDiagonal(from, to)) ||
     (from + 1 === to && isSameRow(from, to))
-  
+
   return possibleMoves
 }

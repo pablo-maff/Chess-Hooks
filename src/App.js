@@ -1,4 +1,4 @@
-import Game from "./components/Game";
+import Game from './components/Game'
 
 function App() {
   return (
@@ -9,4 +9,4 @@ function App() {
   )
 }
 
-export default App;
+export default App

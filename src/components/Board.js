@@ -1,7 +1,7 @@
-import _ from "lodash";
-import { useRef } from "react";
-import { isEven } from "../tools";
-import Square from "./Square"
+import _ from 'lodash'
+import { useRef } from 'react'
+import { isEven } from '../tools'
+import Square from './Square'
 
 const Board = ({ board, selectSquare }) => {
   let initialShade = useRef(false)
@@ -21,7 +21,7 @@ const Board = ({ board, selectSquare }) => {
     return shade
   }
 
-  board = board.map(square => 
+  board = board.map(square =>
     <Square
       key={square.id}
       keyVal={square.id}
@@ -31,7 +31,6 @@ const Board = ({ board, selectSquare }) => {
     />
   )
 
-  // TODO This should be replaced by flexbox to not have problems with screen resizing
   // Gives final shape to the board separating it by row
   const renderBoard = _.chunk(board, 8).map((square, i) =>
     <div key={i} className='board-row'>{square}</div>
