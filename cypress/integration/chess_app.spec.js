@@ -150,7 +150,7 @@ describe('Chess app', function() {
       cy.get('#11').contains('♟')
     })
 
-    it('can\'t destroy pieces jumpint to the other side of the board', function() {
+    it('can\'t destroy pieces jumping to the other side of the board', function() {
       cy.move([55, 39, 8, 24, 53, 45, 24, 32, 39, 32]).contains('♙').should('not.exist')
     })
   })
