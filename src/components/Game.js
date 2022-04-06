@@ -15,7 +15,6 @@ import { isMovePossible } from '../movements'
 import Board from './Board'
 import Promotion from './Promotion'
 
-// TODO: Fix pawns movement bug, it can destroy pieces passing from one side of the board to the other. Eg. from 8 to 15.
 // TODO: Move promotion to pawn movements and castling to king movements to simplify the logic here
 // TODO: Implement notifications
 // TODO: Implement visualization of moves history and map the square id's to real chess square names

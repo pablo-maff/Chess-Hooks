@@ -24,3 +24,4 @@ Implemented from scratch with JS and React Hooks
   - Change for loops to use functions when possible
   - Define @params for all functions
   - Write more comments
+  - Make getPossibleMoves function SMARTER. See comments there for a possible solution.

@@ -141,15 +141,17 @@ describe('Chess app', function() {
 
     it('can\'t destroy a friendly piece', function() {
       cy.move([55, 47, 54, 47])
-
       cy.get('#54').contains('♙')
       cy.get('#47').contains('♙')
     })
 
     it('can\'t jump over other pieces', function() {
       cy.move([51, 35, 15, 23, 35, 27, 8, 16, 27, 19, 11, 27])
-
       cy.get('#11').contains('♟')
+    })
+
+    it('can\'t destroy pieces jumpint to the other side of the board', function() {
+      cy.move([55, 39, 8, 24, 53, 45, 24, 32, 39, 32]).contains('♙').should('not.exist')
     })
   })
 
