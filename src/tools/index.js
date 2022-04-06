@@ -101,7 +101,7 @@ export const isEven = num => num % 2 === 0
 
 export const processMove = (board, from, to) => {
   const newBoard = [...board]
-  const piece = newBoard[from]?.piece
+  const piece = board[from] ? newBoard[from].piece : null
 
   newBoard[from] = {
     ...newBoard[from],
@@ -119,11 +119,14 @@ export const processMove = (board, from, to) => {
 }
 
 export const range = (size, startAt = 0) =>
-  [...Array(size).keys()].map(i => i + startAt);
+  [...Array(size).keys()].map(i => i + startAt)
 
 export const getKingsPosition = (board) =>
   board.filter(square => board[square.id].piece.type === 'king')
 
+// TODO: Make this function SMARTER.
+// Get type of piece in square and all its possible moves. Save all the possible destinations
+// and the origin. Repeat for all the pieces. Create getPath function to achieve this.
 export const getPossibleMoves = (board, player, movesHistory) => {
   const opponent = getOpponent(player)
 
@@ -136,7 +139,7 @@ export const getPossibleMoves = (board, player, movesHistory) => {
   let playerPossibleMoves = []
   for (let to = 0; to < 64; to++) {
     playerPiecesPos.reduce((possibMoves, move) => {
-      if (isMovePossible(board, move, to, movesHistory, player, board[move]?.piece.type)) possibMoves.push({
+      if (isMovePossible(board, move, to, movesHistory, player, board[move].piece.type)) possibMoves.push({
         type: board[move].piece.type,
         player: board[move].piece.player,
         from: move,
@@ -171,11 +174,11 @@ export const isGoingToPromote = (board, player, movesHistory) => {
 
   const isGoingToPromote = getPossibleMoves(board, player, movesHistory).filter(pos =>
     selectPromotionRow.includes(pos.to) && pos.type === 'pawn').map(promSquares => (
-      {
-        player: promSquares.player,
-        from: promSquares.from,
-        to: promSquares.to
-      }))
+    {
+      player: promSquares.player,
+      from: promSquares.from,
+      to: promSquares.to
+    }))
 
   return isGoingToPromote
 }
@@ -215,22 +218,22 @@ export const castlingAllowed = (board, player, movesHistory, to, check) => {
   const opponentPossibleMoves = getPossibleMoves(board, opponent, movesHistory)
   const [shortWhiteKing, longWhiteKing, shortBlackKing, longBlackKing, longWhiteRook,
     shortWhiteRook, longBlackRook, shortBlackRook] = [62, 58, 6, 2, 56, 63, 0, 7]
-    
+
   const [shortWhiteCastlingPath, longWhiteCastlingPath, shortBlackCastlingPath,
     longBlackCastlingPath] = [[61, 62], [57, 58, 59], [5, 6], [1, 2, 3]]
 
   const selectKing = shortWhiteKing === to ? shortWhiteKing : longWhiteKing === to ? longWhiteKing
-  : shortBlackKing === to ? shortBlackKing : longBlackKing === to ? longBlackKing : null
+    : shortBlackKing === to ? shortBlackKing : longBlackKing === to ? longBlackKing : null
 
   const selectRook = shortWhiteKing === to ? shortWhiteRook : longWhiteKing === to ? longWhiteRook
-  : shortBlackKing === to ? shortBlackRook : longBlackKing === to ? longBlackRook : null
+    : shortBlackKing === to ? shortBlackRook : longBlackKing === to ? longBlackRook : null
 
   const selectTo = shortWhiteKing === to ? 62 : longWhiteKing === to ? 58
-  : shortBlackKing === to ? 6 : longBlackKing === to ? 2 : null
+    : shortBlackKing === to ? 6 : longBlackKing === to ? 2 : null
 
   const selectedPath = shortWhiteKing === to ? shortWhiteCastlingPath : longWhiteKing === to ? longWhiteCastlingPath
-  : shortBlackKing === to ? shortBlackCastlingPath : longBlackKing === to ? longBlackCastlingPath : null
-    
+    : shortBlackKing === to ? shortBlackCastlingPath : longBlackKing === to ? longBlackCastlingPath : null
+
   // - There must not be any pieces between the king and the rook
   //    Check path squares
   const checkPath = (board, path) => {
@@ -259,6 +262,7 @@ export const castlingAllowed = (board, player, movesHistory, to, check) => {
 }
 
 export const enPassant = (board, player, movesHistory) => {
+  //console.log('piece', piece)
   const opponent = getOpponent(player)
   // - The capturing pawn must have advanced exactly three ranks to perform this move.
   //      If white pawn is in range 24 to 31 or black pawn is in range 32 to 39
@@ -267,21 +271,28 @@ export const enPassant = (board, player, movesHistory) => {
     black: range(8, 32)
   }
 
-  const pawnInPos = board?.filter((square) => enPassantPositions[player].includes(square.id)
-    && square.piece.type === 'pawn' && square.piece.player === player)
+  const pawnInPos = board.filter((square) => enPassantPositions[player].includes(square.id)
+    && square.piece.player === player)
     .map(pawn => pawn.id)
 
+  if (!pawnInPos.length) return false
+
   // - The en passant capture must be performed on the turn immediately after the pawn being captured moves. If the player does not capture en passant on that turn, they no longer can do it later.
-  const enemyPawnLastMove = movesHistory?.slice(-1)
+  const enemyPawnLastMove = movesHistory.slice(-1)
+
+  // Quick and dirty solution. The multiple looping is probably due to getPossibleMoves,
+  // it should work better when making that func smarter
+  const checkOpponent = enemyPawnLastMove[0][player] ? enemyPawnLastMove[0][player].player : null
+
+  if (player === checkOpponent) return false
 
   // - The captured pawn must have advanced two squares in one move, landing right next to the capturing pawn.
   //      If white, opponent last move is pawn and from + to = 16. If black, opponent last move is pawn and from - to = 16.
   //      And player pawn pos - 1 or pos + 1 = opponent pawn
+  const lastMoveAllowsEnPassant = enemyPawnLastMove.filter(move =>
+    Math.abs(move[opponent].to - move[opponent].from) === 16).map(pawn => pawn[opponent].to)
 
-  const lastMoveAllowsEnPassant = enemyPawnLastMove?.filter(move =>
-    Math.abs(move[opponent]?.to - move[opponent]?.from) === 16).map(pawn => pawn[opponent].to)
-
-  const validEnPassant = pawnInPos?.filter(pawn => pawn - 1 === lastMoveAllowsEnPassant[0] || pawn + 1 === lastMoveAllowsEnPassant[0] || false)
+  const validEnPassant = pawnInPos.filter(pawn => pawn - 1 === lastMoveAllowsEnPassant[0] || pawn + 1 === lastMoveAllowsEnPassant[0] || false)
 
   const selectTo = player === 'white' ? lastMoveAllowsEnPassant - 8 : lastMoveAllowsEnPassant ^ 8
 
@@ -318,8 +329,8 @@ export const isEnPassant = (board, piece, player, from, to) => {
   // Check that enemy pawn has been destroyed
   const enemyPawnDestroyed = board[selectDestroyedEnemyPawn]?.piece.type === null
 
-  // Need to return false to prevent infite loop after executing the first move of 
-  // en passant, which is destroying the enemy pawn. Now we can execute the second 
+  // Need to return false to prevent infite loop after executing the first move of
+  // en passant, which is destroying the enemy pawn. Now we can execute the second
   // part which is moving the player's pawn to its corresponding position
   if (enemyPawnDestroyed) return false
 

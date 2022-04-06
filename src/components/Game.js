@@ -15,6 +15,7 @@ import { isMovePossible } from '../movements'
 import Board from './Board'
 import Promotion from './Promotion'
 
+// TODO: Fix pawns movement bug, it can destroy pieces passing from one side of the board to the other. Eg. from 8 to 15.
 // TODO: Move promotion to pawn movements and castling to king movements to simplify the logic here
 // TODO: Implement notifications
 // TODO: Implement visualization of moves history and map the square id's to real chess square names
@@ -26,6 +27,7 @@ import Promotion from './Promotion'
 // TODO: Change for loops to use functions when possible
 // TODO: Define @params for all functions
 // TODO: Write more comments
+// TODO: Make getPossibleMoves function SMARTER. See comments there for a possible solution.
 
 const Game = () => {
   const [board, setBoard] = useState(initializeBoard())
@@ -48,10 +50,10 @@ const Game = () => {
 
   useEffect(() => {
     const [from, to] = selected
-    const selectedPlayer = from ? board[from].piece.player : null
+    const selectedPlayer = board[from] ? board[from].piece.player : null
     const kingPos = getKingsPosition(board)
     const isSelectedTurn = isPlayerTurn(player, selectedPlayer)
-    const pieceInSquare = from ? board[from].piece.type : null
+    const pieceInSquare = board[from] ? board[from].piece.type : null
     const isCheckForPlayer = isCheck(board, player, movesHistory)
     const isEnPassantForPlayer = isEnPassant(board, pieceInSquare, player, from, to)
     const canMove = isMovePossible(board, from, to, movesHistory, player, pieceInSquare)

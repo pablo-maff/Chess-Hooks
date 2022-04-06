@@ -8,6 +8,10 @@ describe('Chess app', function() {
     cy.contains('♔')
   })
 
+  it('can move from square 0', function() {
+    cy.move([48, 40, 8, 24, 49, 33, 0, 16]).contains('♜')
+  })
+
   describe('Turn', function() {
     it('pieces can\'t move if it\'s not their turn', function() {
       cy.move([8, 16]).contains('♟').should('not.exist')
