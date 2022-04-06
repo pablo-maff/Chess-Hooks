@@ -28,7 +28,6 @@ import Promotion from './Promotion'
 // TODO: Write more comments
 // TODO: Make getPossibleMoves function SMARTER. See comments there for a possible solution.
 
-// TODO en passant and castling
 const Game = () => {
   const [board, setBoard] = useState(initializeBoard())
   const [selected, setSelected] = useState([])
@@ -46,7 +45,6 @@ const Game = () => {
   const selectPromotedPiece = (e) => {
     setPromSelectedPiece(e.target.value)
   }
-
 
   useEffect(() => {
     const [from, to] = selected
@@ -100,10 +98,8 @@ const Game = () => {
       setPlayer(player === 'white' ? 'black' : 'white')
     }
 
-
     else if (pendingPromotion && canPromoteOnNextMove.some(p => p.player === player) &&
     canPromoteOnNextMove.some(p => p.to === to)) {
-      //console.log('PENDING PROMOTION IS FUCKING YOU UP')
       setBoard(acceptPromotion(board, player, from, to))
       setMovesHistory(movesHistory.concat(saveMovementHistory(from, to, player, pieceInSquare)))
       setPendingPromotion(false)
@@ -112,23 +108,19 @@ const Game = () => {
     }
 
     else if (!canMove && to && !castling) {
-      //console.log('NOT A VALID MOVE IS FUCKING YOU UP');
       setSelected([])
       return console.log('That\'s not a valid move')
     }
 
     else if (isCheckForPlayer && !check) {
-      //console.log('ISCHECK IS FUCKING YOU UP');
       setCheck(true)
     }
     else if (!pieceInSquare && from) {
-      //console.log('EMPTY SQUARE IS FUCKING YOU UP');
       setSelected([])
       return console.log(('You can\'t play an empty square, please select a piece'))
     }
 
     else if (!isSelectedTurn && pieceInSquare) {
-      //console.log('NOT YOUR PIECES IS FUCKING YOU UP');
       setSelected([])
       return console.log('Those are not your pieces!')
     }
@@ -139,7 +131,6 @@ const Game = () => {
     }
 
     else if (canMove && isSelectedTurn && !evalCheckOnNextMove && !checkMate){
-      //console.log('MOVE IS FUCKING YOU UP');
       setBoard(processMove(board, from, to))
       if (check) setCheck(false)
       setMovesHistory(movesHistory.concat(saveMovementHistory(from, to, player, pieceInSquare)))
@@ -148,13 +139,11 @@ const Game = () => {
     }
 
     else if (check && to) {
-      //console.log('TRY A DIFFERENT MOVE IS FUCKING YOU UP');
       setSelected([])
       return console.log('That\'s check, try a different move')
     }
 
     else if (evalCheckOnNextMove && to) {
-      //console.log('THAT WILL CAUSE CHECK IS FUCKING YOU UP');
       setSelected([])
       return console.log('That will cause check, try another move')
     }
