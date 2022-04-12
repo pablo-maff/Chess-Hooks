@@ -40,6 +40,7 @@ const Game = () => {
   const [promSelectedPiece, setPromSelectedPiece] = useState(false)
   const [castling, setCastling] = useState(false)
 
+  // eslint-disable-next-line no-console
   if (checkMate) console.log('GAME OVER!')
 
   const selectPromotedPiece = (e) => {
@@ -64,6 +65,7 @@ const Game = () => {
     // TODO If is checkmate without the need of destroying the king notify that the game is over
     if (kingPos.length < 2) {
       setCheckMate(true)
+      // eslint-disable-next-line no-console
       return console.log('Game is Over')
     }
 
@@ -109,6 +111,7 @@ const Game = () => {
 
     else if (!canMove && to && !castling) {
       setSelected([])
+      // eslint-disable-next-line no-console
       return console.log('That\'s not a valid move')
     }
 
@@ -117,11 +120,13 @@ const Game = () => {
     }
     else if (!pieceInSquare && from) {
       setSelected([])
+      // eslint-disable-next-line no-console
       return console.log(('You can\'t play an empty square, please select a piece'))
     }
 
     else if (!isSelectedTurn && pieceInSquare) {
       setSelected([])
+      // eslint-disable-next-line no-console
       return console.log('Those are not your pieces!')
     }
 
@@ -140,11 +145,13 @@ const Game = () => {
 
     else if (check && to) {
       setSelected([])
+      // eslint-disable-next-line no-console
       return console.log('That\'s check, try a different move')
     }
 
     else if (evalCheckOnNextMove && to) {
       setSelected([])
+      // eslint-disable-next-line no-console
       return console.log('That will cause check, try another move')
     }
   }, [board, selected, player, checkMate, check, promotion, pendingPromotion, promSelectedPiece, movesHistory, castling])

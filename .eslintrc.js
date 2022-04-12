@@ -1,10 +1,11 @@
-/* eslint-env node */
 module.exports = {
   "env": {
       "browser": true,
       "es6": true,
       "jest/globals": true,
-      "cypress/globals": true
+      "cypress/globals": true,
+      "node": true,
+      "commonjs": true
   },
   "extends": [ 
       "eslint:recommended",
@@ -45,7 +46,7 @@ module.exports = {
       "arrow-spacing": [
           "error", { "before": true, "after": true }
       ],
-      "no-console": 0,
+      "no-console": "error",
       "react/prop-types": 0,
       "react/react-in-jsx-scope": "off"
   },
