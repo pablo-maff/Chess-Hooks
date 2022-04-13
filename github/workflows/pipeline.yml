@@ -1,0 +1,47 @@
+name: Deployment pipeline
+
+on:
+  push:
+    branches:
+      - master
+  #pull_request:
+    #branches: [master]
+    #types: [opened, synchronize]
+
+jobs:
+  linting_and_testing:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - name: npm install
+        run: npm install
+      - name: lint
+        run: npm run eslint
+      - name: build
+        run: npm run build
+      - name: unit tests
+        run: npm run test
+      - name: e2e tests
+        uses: cypress-io/github-action@v2
+        with:
+          command: npm run test:e2e
+          start: npm run start-prod
+          wait-on: http://localhost:5000
+  run_deployment:
+    if: ${{ (github.event_name == 'push') && (!contains(join(github.event.commits.*.message, ', '), '#skip')) }}
+    needs: [linting_and_testing]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: deployment
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "fso-cicd-pokedex"
+          heroku_email: "pablo.maff.076@gmail.com"
+          healthcheck: "https://fso-cicd-pokedex.herokuapp.com/health"
+          checkstring: "ok"
+          rollbackonhealthcheckfailed: true

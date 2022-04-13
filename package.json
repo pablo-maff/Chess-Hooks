@@ -1,6 +1,8 @@
 {
   "name": "chess",
   "version": "0.0.1",
+  "description": "Chess Game",
+  "main": "src/index.js",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.2",
@@ -21,8 +23,22 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "cypress:open": "cypress open",
+    "test:e2e": "cypress run",
     "eslint": "eslint ."
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pablo-maff/Chess-Hooks.git"
+  },
+  "keywords": [
+    "chess-game"
+  ],
+  "author": "pablo-maff",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pablo-maff/Chess-Hooks/issues"
+  },
+  "homepage": "https://github.com/pablo-maff/Chess-Hooks#readme",
   "eslintConfig": {
     "extends": [
       "react-app",
