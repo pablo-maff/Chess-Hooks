@@ -11,7 +11,7 @@ app.get('/health', (req, res) => {
 })
 
 app.get('/version', (req, res) => {
-  res.send('1') // change this string for the proper version number
+  res.send(process.env.npm_package_version)
 })
 
 app.listen(PORT, () => {
