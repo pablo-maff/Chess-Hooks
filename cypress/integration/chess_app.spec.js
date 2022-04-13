@@ -1,6 +1,6 @@
 describe('Chess app', function() {
   beforeEach(function() {
-    cy.visit('http://localhost:3000')
+    cy.visit('http://localhost:5000')
   })
 
   it('game can be opened and pieces are rendered', function() {
@@ -187,15 +187,15 @@ describe('Chess app', function() {
 
     it('can\'t exploit big jump bugs due to the nature of the board', function() {
       cy.move([57, 40, 10, 18, 40, 23]).contains('♘').should('not.exist')
-      cy.visit('http://localhost:3000')
+      cy.visit('http://localhost:5000')
       cy.move([49, 41, 6, 23, 50, 42, 23, 40]).contains('♞').should('not.exist')
-      cy.visit('http://localhost:3000')
+      cy.visit('http://localhost:5000')
       cy.move([55, 47, 1, 16, 54, 46, 16, 31]).contains('♞').should('not.exist')
-      cy.visit('http://localhost:3000')
+      cy.visit('http://localhost:5000')
       cy.move([49, 41, 6, 21, 50, 42, 21, 31, 52, 44, 31, 16]).contains('♞').should('not.exist')
-      cy.visit('http://localhost:3000')
+      cy.visit('http://localhost:5000')
       cy.move([57, 40, 8, 16, 40, 30]).contains('♘').should('not.exist')
-      cy.visit('http://localhost:3000')
+      cy.visit('http://localhost:5000')
       cy.move([62, 45, 8, 16, 45, 30, 9, 17, 30, 40]).contains('♘').should('not.exist')
 
     })

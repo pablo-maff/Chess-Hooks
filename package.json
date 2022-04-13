@@ -2,7 +2,6 @@
   "name": "chess",
   "version": "0.0.1",
   "description": "Chess Game",
-  "main": "src/index.js",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.2",
@@ -17,10 +16,10 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start-prod": "node app.js",
+    "start-prod": "node ./app.js",
     "server": "nodemon ./app.js", 
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --watchAll",
     "eject": "react-scripts eject",
     "cypress:open": "cypress open",
     "test:e2e": "cypress run",
@@ -38,7 +37,6 @@
   "bugs": {
     "url": "https://github.com/pablo-maff/Chess-Hooks/issues"
   },
-  "homepage": "https://github.com/pablo-maff/Chess-Hooks#readme",
   "eslintConfig": {
     "extends": [
       "react-app",
