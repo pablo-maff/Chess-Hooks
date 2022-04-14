@@ -58,13 +58,4 @@ jobs:
         uses: anothrNick/github-tag-action@1.36.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEFAULT_BUMP: none
-      - name: Bump package.json major version
-        run: npm version major
-        if: ${{ contains(join(github.event.commits.*.message, ', '), '#major') }}
-      - name : Bump package.json minor version
-        run: npm version minor
-        if: ${{ contains(join(github.event.commits.*.message, ', '), '#minor') }}
-      - name: Bump package.json patch version
-        run: npm version patch
-        if: ${{ contains(join(github.event.commits.*.message, ', '), '#patch') }}
+          DEFAULT_BUMP: patch
