@@ -66,11 +66,13 @@ jobs:
         if: ${{ contains(join(github.event.commits.*.message, ', '), '#minor') }}
       - name: Bump package.json patch version
         run: |
+          ls -la
+          rm -rf .git
+          ls -la
           git config user.name "pablo-maff"
           git config user.password ${{ secrets.PASSWORD }}
           git remote set-url origin https://github.com/pablo-maff/Chess-Hooks.git
           npm version patch
-          ls -la
           git add .
           git commit -m 'Update package.json version'
           git push
