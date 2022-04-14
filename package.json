@@ -19,7 +19,7 @@
     "start-prod": "node ./app.js",
     "server": "nodemon ./app.js", 
     "build": "react-scripts build",
-    "test": "react-scripts test --watchAll",
+    "test": "react-scripts test",
     "eject": "react-scripts eject",
     "cypress:open": "cypress open",
     "test:e2e": "cypress run",
