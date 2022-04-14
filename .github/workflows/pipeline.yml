@@ -65,5 +65,7 @@ jobs:
         run: npm version minor
         if: ${{ contains(join(github.event.commits.*.message, ', '), '#minor') }}
       - name: Bump package.json patch version
-        run: npm version patch
+        run: |
+          git config user.name "pablo-maff"
+          npm version patch
         if: ${{ contains(join(github.event.commits.*.message, ', '), '#patch') }}
