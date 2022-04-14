@@ -67,5 +67,10 @@ jobs:
       - name: Bump package.json patch version
         run: |
           git config user.name "pablo-maff"
+          git config user.password ${{ secrets.PASSWORD }}
+          git remote set-url origin https://github.com/pablo-maff/Chess-Hooks.git
           npm version patch
+          git add .
+          git commit -m 'Update package.json version'
+          git push
         if: ${{ contains(join(github.event.commits.*.message, ', '), '#patch') }}
