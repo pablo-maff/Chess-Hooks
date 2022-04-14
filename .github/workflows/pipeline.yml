@@ -58,7 +58,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: none
-      - name: Bump package.json major version
+      - name: Bump packagejson major version
         run: npm version major
         if: ${{ contains(join(github.event.commits.*.message, ', '), '#major') }}
       - name : Bump package.json minor version
