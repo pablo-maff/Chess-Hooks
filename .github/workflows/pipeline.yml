@@ -50,7 +50,7 @@ jobs:
     needs: [run_deployment]
     runs-on: ubuntu-20.04
     steps:
-      if: contains(join(github.event.commits.*.message, ', '), '#skip')
+      if: ${{ contains(join(github.event.commits.*.message, ', '), '#skip') }}
       - uses: actions/checkout@v2
         with:
           node-version: '16'
@@ -60,9 +60,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: none
       - name: Bump package.json version
-        if: contains(join(github.event.commits.*.message, ', '), '#major')
+        if: ${{ contains(join(github.event.commits.*.message, ', '), '#major') }}
           run: npm version major
-        if: contains(join(github.event.commits.*.message, ', '), '#minor')
+        if: ${{ contains(join(github.event.commits.*.message, ', '), '#minor') }}
           run: npm version minor
-        if: contains(join(github.event.commits.*.message, ', '), '#patch')
+        if: ${{ contains(join(github.event.commits.*.message, ', '), '#patch') }}
           run: npm version patch
