@@ -53,7 +53,7 @@ jobs:
           username: ${{ github.event.sender.login }}
           avatarUrl: ${{ github.event.sender.avatar_url }}
           details: Deployment Succesfull
-          footer: ${{ github.event.repository }}
+          footer: ${{ github.repository }}
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
       - name: Deployment failure notification
         uses: rjstone/discord-webhook-notify@v1
@@ -63,7 +63,7 @@ jobs:
           username: ${{ github.event.sender.login }}
           avatarUrl: ${{ github.event.sender.avatar_url }}
           details: Deployment failed
-          footer: ${{ github.event.repository }}
+          footer: ${{ github.repository }}
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
   tag_release:
     if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ', '), '#skip') }}
