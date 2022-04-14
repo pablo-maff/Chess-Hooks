@@ -5,7 +5,7 @@ on:
     branches:
       - main
   pull_request:
-    branches: [master]
+    branches: [main]
     types: [opened, synchronize]
 
 jobs:
@@ -31,7 +31,7 @@ jobs:
           start: npm run start-prod
           wait-on: http://localhost:5000
   run_deployment:
-    if: ${{ (github.event_name == 'push') && (!contains(join(github.event.commits.*.message, ', '), '#skip')) }}
+    if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ', '), '#skip') }}
     needs: [linting_and_testing]
     runs-on: ubuntu-20.04
     steps:
