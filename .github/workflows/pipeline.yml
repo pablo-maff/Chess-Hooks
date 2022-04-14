@@ -45,6 +45,26 @@ jobs:
           healthcheck: "https://chess-hooks.herokuapp.com/health"
           checkstring: "ok"
           rollbackonhealthcheckfailed: true
+      - name: Deployment success notification
+        uses: rjstone/discord-webhook-notify@v1
+        if: success()
+        with:
+          severity: info
+          username: ${{ github.event.sender.login }}
+          avatarUrl: ${{ github.event.sender.avatar_url }}
+          details: Deployment Succesfull
+          footer: ${{ github.event.repository }}
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      - name: Deployment failure notification
+        uses: rjstone/discord-webhook-notify@v1
+        if: failure()
+        with:
+          severity: error
+          username: ${{ github.event.sender.login }}
+          avatarUrl: ${{ github.event.sender.avatar_url }}
+          details: Deployment failed
+          footer: ${{ github.event.repository }}
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
   tag_release:
     if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ', '), '#skip') }}
     needs: [run_deployment]
@@ -67,8 +87,7 @@ jobs:
       - name: Bump package.json patch version
         run: |
           ls -la
-          rm -rf .git
-          ls -la
+          cat .git/config
           git config user.name "pablo-maff"
           git config user.password ${{ secrets.PASSWORD }}
           git remote set-url origin https://github.com/pablo-maff/Chess-Hooks.git
