@@ -4,9 +4,9 @@ on:
   push:
     branches:
       - main
-  #pull_request:
-    #branches: [master]
-    #types: [opened, synchronize]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
 
 jobs:
   linting_and_testing:
@@ -31,7 +31,7 @@ jobs:
           start: npm run start-prod
           wait-on: http://localhost:5000
   run_deployment:
-    #if: ${{ (github.event_name == 'push') && (!contains(join(github.event.commits.*.message, ', '), '#skip')) }}
+    if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ', '), '#skip') }}
     needs: [linting_and_testing]
     runs-on: ubuntu-20.04
     steps:
@@ -45,3 +45,25 @@ jobs:
           healthcheck: "https://chess-hooks.herokuapp.com/health"
           checkstring: "ok"
           rollbackonhealthcheckfailed: true
+  tag_release:
+    if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ', '), '#skip') }}
+    needs: [run_deployment]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          node-version: '16'
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.36.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: none
+      - name: Bump package.json major version
+        run: npm version major
+        if: ${{ contains(join(github.event.commits.*.message, ', '), '#major') }}
+      - name : Bump package.json minor version
+        run: npm version minor
+        if: ${{ contains(join(github.event.commits.*.message, ', '), '#minor') }}
+      - name: Bump package.json patch version
+        run: npm version patch
+        if: ${{ contains(join(github.event.commits.*.message, ', '), '#patch') }}
