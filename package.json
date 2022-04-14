@@ -1,6 +1,6 @@
 {
   "name": "chess",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Chess Game",
   "private": true,
   "dependencies": {
@@ -17,7 +17,7 @@
   "scripts": {
     "start": "react-scripts start",
     "start-prod": "node ./app.js",
-    "server": "nodemon ./app.js", 
+    "server": "nodemon ./app.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
