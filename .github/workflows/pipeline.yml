@@ -30,7 +30,7 @@ jobs:
           username: ${{ github.event.sender.login }}
           avatarUrl: ${{ github.event.sender.avatar_url }}
           description: Bad Commit
-          details: ${{ github.event.commits[0].url }} by ${{ github.event.sender.login }} broke the build :(
+          details: https://github.com/pablo-maff/Chess-Hooks/commit/${{ github.sha }} by ${{ github.event.sender.login }} broke the build :(
           footer: ${{ github.repository }}
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
       - name: unit tests
@@ -43,7 +43,7 @@ jobs:
           wait-on: http://localhost:5000
   run_deployment:
     if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ', '), '#skip') }}
-    needs: [linting_and_testing]
+    needs: [linting_building_and_testing]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
