@@ -9,7 +9,7 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  linting_and_testing:
+  linting_building_and_testing:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -30,7 +30,7 @@ jobs:
           username: ${{ github.event.sender.login }}
           avatarUrl: ${{ github.event.sender.avatar_url }}
           description: Bad Commit
-          details: ${{ github.event.commits.url }} by ${{ github.event.sender.login }} broke the build :(
+          details: ${{ github.event.commits[0].url }} by ${{ github.event.sender.login }} broke the build :(
           footer: ${{ github.repository }}
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
       - name: unit tests
