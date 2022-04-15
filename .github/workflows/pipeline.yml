@@ -21,7 +21,18 @@ jobs:
       - name: lint
         run: npm run eslint
       - name: build
-        run: npm run build
+        run: npm build
+      - name: Build failure notification
+        uses: rjstone/discord-webhook-notify@v1
+        if: failure()
+        with:
+          severity: error
+          username: ${{ github.event.sender.login }}
+          avatarUrl: ${{ github.event.sender.avatar_url }}
+          description: Bad Commit
+          details: ${{ github.event.commits.url }} by ${{ github.event.sender.login }} broke the build :(
+          footer: ${{ github.repository }}
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
       - name: unit tests
         run: CI=true npm test
       - name: e2e tests
@@ -52,17 +63,8 @@ jobs:
           severity: info
           username: ${{ github.event.sender.login }}
           avatarUrl: ${{ github.event.sender.avatar_url }}
-          details: Deployment Succesfull
-          footer: ${{ github.repository }}
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
-      - name: Deployment failure notification
-        uses: rjstone/discord-webhook-notify@v1
-        if: failure()
-        with:
-          severity: error
-          username: ${{ github.event.sender.login }}
-          avatarUrl: ${{ github.event.sender.avatar_url }}
-          details: Deployment failed
+          description: A new version of Chess-Hooks has been deployed
+          details:  to https://chess-hooks.herokuapp.com
           footer: ${{ github.repository }}
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
   tag_release:
@@ -77,22 +79,4 @@ jobs:
         uses: anothrNick/github-tag-action@1.36.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEFAULT_BUMP: none
-      - name: Bump packagejson major version
-        run: npm version major
-        if: ${{ contains(join(github.event.commits.*.message, ', '), '#major') }}
-      - name : Bump package.json minor version
-        run: npm version minor
-        if: ${{ contains(join(github.event.commits.*.message, ', '), '#minor') }}
-      - name: Bump package.json patch version
-        run: |
-          ls -la
-          cat .git/config
-          git config user.name "pablo-maff"
-          git config user.password ${{ secrets.PASSWORD }}
-          git remote set-url origin https://github.com/pablo-maff/Chess-Hooks.git
-          npm version patch
-          git add .
-          git commit -m 'Update package.json version'
-          git push
-        if: ${{ contains(join(github.event.commits.*.message, ', '), '#patch') }}
+          DEFAULT_BUMP: patch
