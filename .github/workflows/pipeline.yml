@@ -43,7 +43,7 @@ jobs:
           wait-on: http://localhost:5000
   run_deployment:
     if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ', '), '#skip') }}
-    needs: [linting_and_testing]
+    needs: [linting_building_and_testing]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
