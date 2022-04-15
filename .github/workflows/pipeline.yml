@@ -30,7 +30,7 @@ jobs:
           username: ${{ github.event.sender.login }}
           avatarUrl: ${{ github.event.sender.avatar_url }}
           description: Bad Commit
-          details: ${{ github.event.commits[0].url }} by ${{ github.event.sender.login }} broke the build :(
+          details: https://github.com/pablo-maff/Chess-Hooks/commit/${{ github.sha }} by ${{ github.event.sender.login }} broke the build :(
           footer: ${{ github.repository }}
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
       - name: unit tests
