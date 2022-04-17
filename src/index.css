@@ -8,29 +8,35 @@ ol, ul {
   padding-left: 30px;
 }
 
-.board-row:after {
-  clear: both;
-  content: "";
-  display: table;
+
+.chessboard {
+  border: 2px solid black;
+  box-sizing: content-box;
+  display: flex;
+  flex-direction: column;
+  height: 50vw;
+  margin: 0 auto;
+  width: 50vw;
 }
+
+.board-row {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+}
+
 
 .status {
   margin-bottom: 10px;
 }
 
 .square {
+  transform: translate(0, 0);
   background: transparent;
   border: 1px solid transparent;
-  float: left;
-  font-size: 24px;
-  font-weight: bold;
-  line-height: 34px;
-  height: 48px;
-  margin-right: -1px;
-  margin-top: -1px;
-  padding: 0;
+  font-size: 3.8vw;
+  font-weight: lighter;
   text-align: center;
-  width: 48px;
 }
 
 .square:focus {
@@ -55,11 +61,13 @@ ol, ul {
 
 /*Board color scheme Wheat from http://omgchess.blogspot.com/2015/09/chess-board-color-schemes.html*/
 .dark-square{
-background-color: RGB(187,190,100);
+  background-color: RGB(187,190,100);
+  flex: 1;
 }
 
 .light-square{
-    background-color: RGB(234,240,206);
+  background-color: RGB(234,240,206);
+  flex: 1;
 }
 
 #player-turn-box{
