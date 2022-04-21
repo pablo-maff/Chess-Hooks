@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { chunk } from 'lodash'
 import { useRef } from 'react'
 import { isEven } from '../tools'
 import Square from './Square'
@@ -30,11 +30,12 @@ const Board = ({ board, selectSquare }) => {
       shade={selectShade(square.id)}
       piece={square.piece}
       selectSquare={selectSquare}
+      board={board}
     />
   )
 
   // Gives final shape to the board separating it by row
-  const renderBoard = _.chunk(board, 8).map((row, i) =>
+  const renderBoard = chunk(board, 8).map((row, i) =>
     <div key={i} className='board-row'>{row}</div>
   )
 

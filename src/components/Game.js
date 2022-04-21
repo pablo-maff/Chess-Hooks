@@ -14,6 +14,7 @@ import { acceptPromotion,
 import { isMovePossible } from '../movements'
 import Board from './Board'
 import Promotion from './Promotion'
+import Turn from './Turn'
 
 // TODO: Move promotion to pawn movements and castling to king movements to simplify the logic here
 // TODO: Implement notifications
@@ -48,20 +49,18 @@ const Game = () => {
 
   useEffect(() => {
     const [from, to] = selected
-    const selectedPlayer = board[from] ? board[from].piece.player : null
     const kingPos = getKingsPosition(board)
+    const selectedPlayer = board[from] ? board[from].piece.player : null
     const isSelectedTurn = isPlayerTurn(player, selectedPlayer)
     const pieceInSquare = board[from] ? board[from].piece.type : null
-    const isCheckForPlayer = isCheck(board, player, movesHistory)
     const isEnPassantForPlayer = isEnPassant(board, pieceInSquare, player, from, to)
     const canMove = isMovePossible(board, from, to, movesHistory, player, pieceInSquare)
     const possibleBoard = processMove(board, from, to)
+    const isCheckForPlayer = isCheck(board, player, movesHistory)
     const evalCheckOnNextMove = isCheck(possibleBoard, player, movesHistory)
     const canPromoteOnNextMove = isGoingToPromote(board, player, movesHistory)
     const canCastle = castlingAllowed(board, player, movesHistory, to, check)
     const [shortWhiteRook, longWhiteRook, shortBlackRook, longBlackRook] = [[63, 61], [56, 59], [7, 5], [0, 3]]
-
-    // eslint-disable-next-line no-console
 
 
     // TODO If is checkmate without the need of destroying the king notify that the game is over
@@ -172,6 +171,7 @@ const Game = () => {
         />
       </div>
       {promotion && <Promotion player={player} selectPiece={selectPromotedPiece} />}
+      <Turn player={player} />
     </>
   )
 }

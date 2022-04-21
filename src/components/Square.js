@@ -2,36 +2,40 @@ import { useDrag, useDrop } from 'react-dnd'
 import { renderPiece } from '../tools'
 import { useRef } from 'react'
 
-const Square = ({ shade, selectSquare, squareID, piece }) => {
+const Square = ({ shade, selectSquare, squareID, piece, board }) => {
   const ref = useRef(null)
   const handleClick = () => selectSquare(squareID)
+  const movePieces = board[squareID].piece.type !== null
+
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'piece',
-    item: { id: squareID },
+    item: {
+      id: squareID,
+    },
+    canDrag: movePieces,
     collect: (monitor) => ({
-      isDragging: !!monitor.isDragging()
+      isDragging: !!monitor.isDragging(),
+    })
+  }), [movePieces])
 
+  const [{ isOver }, drop] = useDrop(() => ({
+    accept: 'piece',
+    drop: (item) => {
+      selectSquare([item.id, squareID])
+    },
+    collect: (monitor) => ({
+      isOver: !!monitor.isOver()
     })
   }))
 
-  // eslint-disable-next-line no-unused-vars
-  const [{ isOver }, drop] = useDrop(() => ({
-    accept: 'piece',
-    drop: (item) => selectSquare([item.id, squareID]),
-    collect: monitor => ({
-      isOver: !!monitor.isOver()
-    }),
-  }), [squareID])
-
-  // Initialize drag and drop into the element using its reference.
   drag(drop(ref))
 
   return (
-    <button
+    <div
       ref={ref}
       style={{
         cursor: 'move',
-        backgroundColor: isDragging ? 'yellow' : ''
+        backgroundColor: isOver ? 'yellow' : '',
       }}
       className={'square ' + shade}
       id={squareID}
@@ -39,7 +43,7 @@ const Square = ({ shade, selectSquare, squareID, piece }) => {
       key={squareID}
     >
       {isDragging ? '' : renderPiece(piece)}
-    </button>
+    </div>
 
   )
 }

@@ -4,7 +4,6 @@ describe('Chess app', function() {
   })
 
   it('game can be opened and pieces are rendered', function() {
-    cy.contains('Chess Game')
     cy.contains('♔')
   })
 
