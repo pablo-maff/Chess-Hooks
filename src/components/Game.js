@@ -15,6 +15,7 @@ import { isMovePossible } from '../movements'
 import Board from './Board'
 import Promotion from './Promotion'
 import Turn from './Turn'
+import Header from './Header'
 
 // TODO: Move promotion to pawn movements and castling to king movements to simplify the logic here
 // TODO: Implement notifications
@@ -82,6 +83,7 @@ const Game = () => {
       setBoard(processPromotion(board, from, selectedPiece))
       setSelected([])
       setPromotion(false)
+      setPromSelectedPiece(false)
       setPlayer(player === 'white' ? 'black' : 'white')
     }
 
@@ -164,14 +166,15 @@ const Game = () => {
 
   return (
     <>
+      <Header />
       <div className="game-board">
         <Board
           board={board}
           selectSquare={selectPiecePath}
         />
       </div>
-      {promotion && <Promotion player={player} selectPiece={selectPromotedPiece} />}
       <Turn player={player} />
+      {promotion && <Promotion player={player} selectPiece={selectPromotedPiece} />}
     </>
   )
 }

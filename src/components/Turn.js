@@ -1,11 +1,11 @@
 const Turn = ({ player }) => {
-  const color = player === 'white' ? 'white' : 'black'
+  const elemColor = player === 'white' ? 'white' : 'black'
 
   return (
-    <>
-      <h3>Turn</h3>
-      <div id="player-turn-box" style={{ background: color }} />
-    </>
+    <div className="turn">
+      <h4>Turn</h4>
+      <div id="player-turn-circle" style={{ background: elemColor }}></div>
+    </div>
   )
 }
 

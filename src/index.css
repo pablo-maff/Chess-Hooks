@@ -1,37 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Turret+Road:wght@800&display=swap');
+
 body {
-  background-color: #ECECEA;
+  background-color: rgb(78, 85, 105);
+  background-repeat: no-repeat;
+  background-size: cover;
+  font-family: 'Turret Road';
 }
 
-ol, ul {
-  padding-left: 30px;
+.main-header {
+  margin-bottom: 5vw;
+  color: rgb(231, 216, 216);
+  font-size: 3vw;
+  margin: auto;
+  width: 50%;
 }
 
 .game-board {
   display: flex;
-  align-items: bottom;
+  position: relative;
+  width: 50%;
+  height: 50%;
+  margin: auto;
 }
 
 .chessboard {
-  border: 2px solid black;
-  box-sizing: content-box;
+  box-sizing: border-box;
+  border: medium groove rgba(233, 162, 8, 0.6);
   display: flex;
   flex-direction: column;
-  height: 45vw;
-  width: 50vw;
-  min-width: 10vw;
-  min-height: 10vw;
-  margin: 25vw;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.game-board:after {
+  content: '';
+  display: block;
+  padding-top: 100%;
 }
 
 .board-row {
   display: flex;
   flex: 1;
   flex-direction: row;
-}
-
-
-.status {
-  margin-bottom: 10px;
+  min-width: 12.5%;
+  min-height: 12.5%;
 }
 
 .square {
@@ -39,47 +52,70 @@ ol, ul {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 3.4vw;
+  font-size: 4.15vw;
+ 
 }
-
-.square:focus {
-  outline: none;
-}
-
-.kbd-navigation .square:focus {
-  background: #ddd;
-}
-
-.game-info {
-  margin-left: 20px;
-}
-
-
-.icons-attribution, .game-status, .fallen-soldier-block{
-  margin-top: 20px;
-  min-height: 50px;
-}
-
-
 
 /*Board color scheme Wheat from http://omgchess.blogspot.com/2015/09/chess-board-color-schemes.html*/
 .dark-square{
-  background-color: RGB(187,190,100);
+  background-color: rgba(187, 190, 100, .9);
   flex: 1;
 }
 
 .light-square{
-  background-color: RGB(234,240,206);
+  background-color: rgba(234, 240, 206, .9);
   flex: 1;
 }
 
-#player-turn-box{
-  width: 32px;
-  height: 32px;
-  border: 1px solid #000;
-  margin-bottom: 10px;
+.turn {
+  position: relative;
+  left: 76vw;
+  bottom: 32vw;
 }
 
-h3{
-  margin-bottom: 5px;
+.turn h4 {
+  color: rgb(231, 216, 216);
+  margin-bottom: 0.3vw;
+  padding: 0.3vw;
+  width: 5%;
+  font-size: 2vw;
+}
+
+#player-turn-circle{
+  border: 0.25vw solid #fff;
+  width: 3vw;
+  height: 3vw;
+  border-radius: 50%;
+  margin-top: 0.2vw;
+  margin-left: 1vw;
+}
+
+
+.promotion {
+  color: rgb(231, 216, 216);
+  position: relative;
+  bottom: 48vw;
+  width: 5%;
+  left: 17vw;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  font-size: 1.5vw;
+  letter-spacing: 0.07vw;
+}
+
+.promotion p {
+  position: relative;
+  right: 1vw;
+  letter-spacing: .15vw;
+}
+
+.promotion button{
+  background-color: rgb(114, 108, 108);
+  width: 5vw;
+  height: 5vw;
+  font-size: 4vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
