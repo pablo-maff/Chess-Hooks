@@ -190,10 +190,10 @@ export const acceptPromotion = (board, player, from, to) => {
   }
 }
 
-export const processPromotion = (board, from, piece) => {
+export const processPromotion = (board, pieceToPromote, piece) => {
   const newBoard = [...board]
-  newBoard[from] = {
-    ...newBoard[from],
+  newBoard[pieceToPromote] = {
+    ...newBoard[pieceToPromote],
     piece
   }
   return newBoard

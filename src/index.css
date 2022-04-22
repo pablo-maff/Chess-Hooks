@@ -2,8 +2,6 @@
 
 body {
   background-color: rgb(78, 85, 105);
-  background-repeat: no-repeat;
-  background-size: cover;
   font-family: 'Turret Road';
 }
 
@@ -52,7 +50,6 @@ body {
   align-items: center;
   justify-content: center;
   font-size: 4.15vw;
- 
 }
 
 /*Board color scheme Wheat from http://omgchess.blogspot.com/2015/09/chess-board-color-schemes.html*/

@@ -38,11 +38,15 @@ const Game = () => {
   const [movesHistory, setMovesHistory] = useState([])
   const [pendingPromotion, setPendingPromotion] = useState(false)
   const [promotion, setPromotion] = useState(false)
+  const [pieceToPromote, setPieceToPromote] = useState(null)
   const [promSelectedPiece, setPromSelectedPiece] = useState(false)
   const [castling, setCastling] = useState(false)
 
   // eslint-disable-next-line no-console
   if (checkMate) console.log('GAME OVER!')
+
+  // eslint-disable-next-line no-console
+  console.log('selected', selected)
 
   const selectPromotedPiece = (e) => {
     setPromSelectedPiece(e.target.value)
@@ -80,8 +84,9 @@ const Game = () => {
         player: player,
         type: promSelectedPiece
       }
-      setBoard(processPromotion(board, from, selectedPiece))
+      setBoard(processPromotion(board, pieceToPromote, selectedPiece))
       setSelected([])
+      setPieceToPromote(null)
       setPromotion(false)
       setPromSelectedPiece(false)
       setPlayer(player === 'white' ? 'black' : 'white')
@@ -109,7 +114,7 @@ const Game = () => {
       setMovesHistory(movesHistory.concat(saveMovementHistory(from, to, player, pieceInSquare)))
       setPendingPromotion(false)
       setPromotion(true)
-      setSelected([to])
+      setPieceToPromote([to])
     }
 
     else if (!canMove && to && !castling) {
@@ -138,7 +143,7 @@ const Game = () => {
         : setBoard(processEnPassant(board, to - 8))
     }
 
-    else if (canMove && isSelectedTurn && !evalCheckOnNextMove && !checkMate){
+    else if (canMove && isSelectedTurn && !evalCheckOnNextMove && !checkMate && !promotion){
       setBoard(processMove(board, from, to))
       if (check) setCheck(false)
       setMovesHistory(movesHistory.concat(saveMovementHistory(from, to, player, pieceInSquare)))
