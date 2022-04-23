@@ -57,6 +57,21 @@ describe('Chess app', function() {
       cy.move([52, 36, 13, 29, 61, 34, 15, 23, 34, 6])
       cy.get('#prom-queen').should('not.exist')
     })
+
+    it('promotes the piece on the right square', function () {
+      cy.move([54, 38, 14, 30, 53, 37, 30, 37, 38, 30, 6, 21, 30, 22, 15, 23, 22, 14, 10, 18, 14, 6, 1, 32])
+      cy.get('#prom-queen').click()
+      cy.get('#6').contains('♕')
+    })
+
+    it('if a promotion already happened, the next one can choose his piece', function() {
+      cy.move([54, 38, 13, 29, 38, 30, 29, 37, 30, 22, 37, 45, 22, 15, 45, 52, 15, 6])
+      cy.get('#prom-queen').click()
+      cy.get('#6').contains('♕')
+      cy.move([52, 59])
+      cy.get('#prom-queen').click()
+      cy.get('#59').contains('♛')
+    })
   })
 
   describe('Castling', function() {

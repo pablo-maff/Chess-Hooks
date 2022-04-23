@@ -45,9 +45,6 @@ const Game = () => {
   // eslint-disable-next-line no-console
   if (checkMate) console.log('GAME OVER!')
 
-  // eslint-disable-next-line no-console
-  console.log('selected', selected)
-
   const selectPromotedPiece = (e) => {
     setPromSelectedPiece(e.target.value)
   }
