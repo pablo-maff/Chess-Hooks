@@ -1,17 +1,50 @@
+import { useDrag, useDrop } from 'react-dnd'
 import { renderPiece } from '../tools'
+import { useRef } from 'react'
 
-const Square = ({ shade, selectSquare, style, keyVal, piece }) => {
-  const handleClick = () => selectSquare(keyVal)
+const Square = ({ shade, selectSquare, squareID, piece, board }) => {
+  const ref = useRef(null)
+  const handleClick = () => selectSquare(squareID)
+  const movePieces = board ? board[squareID].piece.type !== null : null
+
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: 'piece',
+    item: {
+      id: squareID,
+    },
+    canDrag: movePieces,
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    })
+  }), [movePieces])
+
+  const [{ isOver }, drop] = useDrop(() => ({
+    accept: 'piece',
+    drop: (item) => {
+      selectSquare([item.id, squareID])
+    },
+    collect: (monitor) => ({
+      isOver: !!monitor.isOver()
+    })
+  }))
+
+  drag(drop(ref))
 
   return (
-    <button className={'square ' + shade}
-      id={keyVal}
+    <div
+      ref={ref}
+      style={{
+        cursor: 'move',
+        backgroundColor: isOver ? 'yellow' : '',
+      }}
+      className={'square ' + shade}
+      id={squareID}
       onClick={handleClick}
-      style={style}
-      key={keyVal}
+      key={squareID}
     >
-      {renderPiece(piece)}
-    </button>
+      {isDragging ? '' : renderPiece(piece)}
+    </div>
+
   )
 }
 

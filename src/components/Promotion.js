@@ -6,22 +6,24 @@ import Bishop from './pieces/Bishop'
 
 const Promotion = ({ player, selectPiece }) => {
 
+  const selectColor = player === 'white' ? 'white' : 'black'
+
+
   return (
-    <div>
-      <p><b>To which piece do you want to promote?</b></p>
-      <button id="prom-queen" value='queen' onClick={selectPiece}>
+    <div className='promotion'>
+      <p>Promote!</p>
+      <button style={{ color: selectColor }} id="prom-queen" value='queen' onClick={selectPiece}>
         <Queen player={player} />
       </button>
-      <button id="prom-rook" value='rook' onClick={selectPiece}>
+      <button style={{ color: selectColor }} id="prom-rook" value='rook' onClick={selectPiece}>
         <Rook player={player} />
       </button>
-      <button id="prom-bishop" value='bishop' onClick={selectPiece}>
+      <button style={{ color: selectColor }} id="prom-bishop" value='bishop' onClick={selectPiece}>
         <Bishop player={player} />
       </button>
-      <button id="prom-knight" value='knight' onClick={selectPiece}>
+      <button style={{ color: selectColor }} id="prom-knight" value='knight' onClick={selectPiece}>
         <Knight player={player} />
       </button>
-
     </div>
   )
 }

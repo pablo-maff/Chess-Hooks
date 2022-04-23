@@ -1,7 +1,9 @@
-import _ from 'lodash'
+import { chunk } from 'lodash'
 import { useRef } from 'react'
 import { isEven } from '../tools'
 import Square from './Square'
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 
 const Board = ({ board, selectSquare }) => {
   let initialShade = useRef(false)
@@ -24,22 +26,25 @@ const Board = ({ board, selectSquare }) => {
   board = board.map(square =>
     <Square
       key={square.id}
-      keyVal={square.id}
+      squareID={square.id}
       shade={selectShade(square.id)}
       piece={square.piece}
       selectSquare={selectSquare}
+      board={board}
     />
   )
 
   // Gives final shape to the board separating it by row
-  const renderBoard = _.chunk(board, 8).map((square, i) =>
-    <div key={i} className='board-row'>{square}</div>
+  const renderBoard = chunk(board, 8).map((row, i) =>
+    <div key={i} className='board-row'>{row}</div>
   )
 
   return (
-    <>
-      {renderBoard}
-    </>
+    <DndProvider backend={HTML5Backend}>
+      <div className='chessboard'>
+        {renderBoard}
+      </div>
+    </DndProvider>
   )
 }
 
