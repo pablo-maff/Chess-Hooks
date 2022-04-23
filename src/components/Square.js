@@ -5,7 +5,7 @@ import { useRef } from 'react'
 const Square = ({ shade, selectSquare, squareID, piece, board }) => {
   const ref = useRef(null)
   const handleClick = () => selectSquare(squareID)
-  const movePieces = board[squareID].piece.type !== null
+  const movePieces = board ? board[squareID].piece.type !== null : null
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'piece',

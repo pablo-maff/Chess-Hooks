@@ -1,5 +1,7 @@
 import '@testing-library/jest-dom/extend-expect'
 import { render, screen } from '@testing-library/react'
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 import Square from './Square'
 
 const square = {
@@ -13,11 +15,14 @@ describe('Renders', () => {
   test('an empty square', () => {
 
     render(
-      <div data-testid={square.id}>
-        <Square
-          piece={square.piece[0]}
-        />
-      </div>
+      <DndProvider backend={HTML5Backend}>
+        <div data-testid={square.id}>
+          <Square
+            piece={square.piece[0]}
+          />
+        </div>
+      </DndProvider>
+
     )
 
     const squareId = screen.getByTestId('1')
@@ -26,11 +31,13 @@ describe('Renders', () => {
 
   test('a square with a piece', () => {
     render(
-      <div data-testid={square.id}>
-        <Square
-          piece={square.piece[1]}
-        />
-      </div>
+      <DndProvider backend={HTML5Backend}>
+        <div data-testid={square.id}>
+          <Square
+            piece={square.piece[1]}
+          />
+        </div>
+      </DndProvider>
     )
 
     const squareId = screen.getByTestId('1')
